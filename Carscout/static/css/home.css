@@ -1,0 +1,161 @@
+/* ===== RESET ===== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+/* ===== NAVBAR ===== */
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 40px;
+    background: #f8f9fb;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.nav-left {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.logo {
+    font-size: 22px;
+    font-weight: bold;
+    color: #3c4bff;
+}
+
+.location {
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.nav-center {
+    list-style: none;
+    display: flex;
+    gap: 30px;
+    font-weight: 500;
+}
+
+.nav-center li {
+    cursor: pointer;
+}
+
+.nav-center li:hover {
+    color: #ff6b00;
+}
+
+.active {
+    color: #ff6b00;
+}
+
+.nav-right {
+    font-size: 14px;
+    text-align: right;
+}
+
+.account {
+    cursor: pointer;
+}
+
+/* ===== HERO ===== */
+
+.hero {
+    height: 85vh;
+    background: linear-gradient(to right, #3c4bff, #5f7cff);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: white;
+}
+
+.hero-content h1 {
+    font-size: 42px;
+    margin-bottom: 15px;
+}
+
+.hero-content p {
+    font-size: 18px;
+    margin-bottom: 25px;
+}
+
+.hero-btn {
+    padding: 12px 25px;
+    border: none;
+    background: white;
+    color: #3c4bff;
+    font-weight: bold;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.hero-btn:hover {
+    background: #ff6b00;
+    color: white;
+}
+
+/* ===== FOOTER ===== */
+
+.footer {
+    background: #111;
+    color: #ddd;
+    padding: 50px 40px 20px;
+}
+
+.footer-container {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 30px;
+}
+
+.footer-col h3,
+.footer-col h4 {
+    margin-bottom: 15px;
+}
+
+.footer-col p {
+    margin-bottom: 8px;
+    cursor: pointer;
+}
+
+.footer-col p:hover {
+    color: #ff6b00;
+}
+
+.footer-bottom {
+    text-align: center;
+    border-top: 1px solid #333;
+    padding-top: 15px;
+    font-size: 14px;
+}
+
+/* ===== RESPONSIVE ===== */
+
+@media (max-width: 768px) {
+
+    .nav-center {
+        display: none;
+    }
+
+    .navbar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+    .footer-container {
+        flex-direction: column;
+        gap: 30px;
+    }
+
+    .hero-content h1 {
+        font-size: 28px;
+    }
+}

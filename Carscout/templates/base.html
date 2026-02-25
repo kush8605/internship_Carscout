@@ -1,0 +1,16 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+
+    {% if request.user.role = "admin" %}
+        {% include 'adminhome.html' %}
+    {% comment %} {% else %}
+        {% include 'home.html' %}  {% endcomment %}
+    {% endif %}
+</body>
+</html>

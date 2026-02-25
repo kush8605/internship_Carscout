@@ -1,0 +1,46 @@
+{% load static %}
+<p>{{ request.user }}</p>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - CarScout</title>
+    <link rel="stylesheet" href="{% static 'css/adminhome.css' %}">
+</head>
+<body>
+
+<nav class="admin-navbar">
+    <div class="logo">🛠 CarScout Admin</div>
+
+    <div class="menu-toggle" id="mobile-menu">
+        ☰
+    </div>
+
+    <ul class="nav-links" id="nav-links">
+        <li><a href="#">Dashboard</a></li>
+        <li><a href="#">Manage Users</a></li>
+        <li><a href="#">Manage Cars</a></li>
+        <li><a href="#">Reports</a></li>
+        <li><a href="/admin/">Django-portal</a></li>
+
+        <li><a href="#" class="logout-btn">Logout</a></li>
+    </ul>
+</nav>
+
+<section class="admin-content">
+    <h1>Welcome Admin 👋</h1>
+    <p>Manage your CarScout platform from here.</p>
+</section>
+
+<script>
+    const menuToggle = document.getElementById("mobile-menu");
+    const navLinks = document.getElementById("nav-links");
+
+    menuToggle.addEventListener("click"{
+        navLinks.classList.toggle("active");
+    });
+</script>
+
+</body>
+</html>

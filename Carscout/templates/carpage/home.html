@@ -1,0 +1,82 @@
+{% load static %}
+<p>{{ request.user }}</p>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CarScout - Home</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/home.css' %}">
+</head>
+<body>
+
+<!-- ================= NAVBAR ================= -->
+
+<nav class="navbar">
+    <div class="nav-left">
+        <div class="logo">CarScout</div>
+
+        <div class="location">
+            📍 <span>Set Location</span> ▼
+        </div>
+    </div>
+
+    <ul class="nav-center">
+        <li>Buy used car ▼</li>
+        <li class="active">Sell car ▼</li>
+        <li>Car finance ▼</li>
+        <li>New cars ▼</li>
+        <li>Car services ▼</li>
+    </ul>
+
+    <div class="nav-right">
+        <div class="account">
+            👤 Hello, Sign in <br>
+            <strong>Account ▼</strong>
+        </div>
+    </div>
+</nav>
+
+<!-- ================= HERO SECTION ================= -->
+
+<section class="hero">
+    <div class="hero-content">
+        <h1>Find Your Perfect Car</h1>
+        <p>Buy, Sell & Explore Cars Easily</p>
+        <button class="hero-btn">Browse Cars</button>
+    </div>
+</section>
+
+<!-- ================= FOOTER ================= -->
+
+<footer class="footer">
+    <div class="footer-container">
+
+        <div class="footer-col">
+            <h3>CarScout</h3>
+            <p>Your trusted platform to buy and sell cars.</p>
+        </div>
+
+        <div class="footer-col">
+            <h4>Company</h4>
+            <p>About Us</p>
+            <p>Careers</p>
+            <p>Contact</p>
+        </div>
+
+        <div class="footer-col">
+            <h4>Services</h4>
+            <p>Buy Car</p>
+            <p>Sell Car</p>
+            <p>Car Finance</p>
+        </div>
+
+    </div>
+
+    <div class="footer-bottom">
+        © 2026 CarScout. All rights reserved.
+    </div>
+</footer>
+
+</body>
+</html>
