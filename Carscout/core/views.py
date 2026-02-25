@@ -16,10 +16,6 @@ def userSignupView(request):
 
     return render(request, 'core/signup.html', {'form': form})
 
-
-
-
-
 def userLoginView(request):
     if request.method == 'POST':
         form = userlogin(request.POST)
