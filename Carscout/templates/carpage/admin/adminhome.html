@@ -1,0 +1,442 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+{% comment %} <p>{{ request.user }}</p> {% endcomment %}
+
+<!-- OVERLAY (mobile) -->
+<div class="overlay" id="overlay" onclick="closeSidebar()"></div>
+
+<!-- ===== MAIN ===== -->
+<div class="main">
+
+  <!-- TOPBAR -->
+  <header class="topbar">
+    <button class="icon-btn menu-btn" onclick="toggleSidebar()">☰</button>
+    <div class="topbar-title" id="topbar-title">Dashboard</div>
+    <div class="search-bar">
+      <span class="s-icon">🔍</span>
+      <input type="text" placeholder="Search anything...">
+    </div>
+    <div class="topbar-actions">
+      <div class="icon-btn" title="Notifications">
+        🔔
+        <div class="notif-dot"></div>
+      </div>
+      <div class="icon-btn" title="Help">❓</div>
+      <div class="icon-btn logout-icon" onclick="logout()" title="Logout">🚪</div>
+    </div>
+  </header>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- ===== DASHBOARD PAGE ===== -->
+    <div class="page active" id="page-dashboard">
+
+      <!-- SKELETON -->
+      <div class="skeleton-wrapper" id="skel-dashboard">
+        <div class="skel-header">
+          <div class="skel skel-title"></div>
+          <div class="skel skel-subtitle"></div>
+        </div>
+        <div class="stats-grid">
+          <div class="skel-stat-card"><div class="skel skel-icon"></div><div class="skel skel-num"></div><div class="skel skel-label"></div><div class="skel skel-chip"></div></div>
+          <div class="skel-stat-card"><div class="skel skel-icon"></div><div class="skel skel-num"></div><div class="skel skel-label"></div><div class="skel skel-chip"></div></div>
+          <div class="skel-stat-card"><div class="skel skel-icon"></div><div class="skel skel-num"></div><div class="skel skel-label"></div><div class="skel skel-chip"></div></div>
+          <div class="skel-stat-card"><div class="skel skel-icon"></div><div class="skel skel-num"></div><div class="skel skel-label"></div><div class="skel skel-chip"></div></div>
+        </div>
+        <div class="two-col">
+          <div class="skel-card"><div class="skel skel-card-title"></div><div class="skel skel-chart"></div></div>
+          <div class="skel-card"><div class="skel skel-card-title"></div><div class="skel-lines"><div class="skel skel-line"></div><div class="skel skel-line"></div><div class="skel skel-line"></div><div class="skel skel-line"></div></div></div>
+        </div>
+        <div class="skel-card" style="margin-top:20px"><div class="skel skel-card-title"></div><div class="skel-table"><div class="skel skel-row"></div><div class="skel skel-row"></div><div class="skel skel-row"></div></div></div>
+      </div>
+
+      <!-- REAL CONTENT -->
+      <div class="page-real" id="real-dashboard" style="display:none">
+        <div class="page-header">
+          <h2>Welcome back, Admin 👋</h2>
+          <p>Here's what's happening on WheelDeal today.</p>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-card blue">
+            <div class="stat-icon blue">🚗</div>
+            <div class="stat-value">1,248</div>
+            <div class="stat-label">Total Listings</div>
+            <div class="stat-change up">↑ 12% this month</div>
+          </div>
+          <div class="stat-card amber">
+            <div class="stat-icon amber">👥</div>
+            <div class="stat-value">8,463</div>
+            <div class="stat-label">Registered Users</div>
+            <div class="stat-change up">↑ 8% this month</div>
+          </div>
+          <div class="stat-card green">
+            <div class="stat-icon green">💰</div>
+            <div class="stat-value">₹4.2M</div>
+            <div class="stat-label">Monthly Revenue</div>
+            <div class="stat-change up">↑ 23% vs last month</div>
+          </div>
+          <div class="stat-card red">
+            <div class="stat-icon red">💬</div>
+            <div class="stat-value">142</div>
+            <div class="stat-label">Open Inquiries</div>
+            <div class="stat-change down">↓ 5 unresolved today</div>
+          </div>
+        </div>
+
+        <div class="two-col">
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <div class="card-title">Listings Overview</div>
+                <div class="card-subtitle">Monthly car listings added</div>
+              </div>
+              <select class="filter-select" style="font-size:12px;padding:5px 10px">
+                <option>Last 7 months</option>
+                <option>Last year</option>
+              </select>
+            </div>
+            <div class="card-body">
+              <div class="chart-area" id="chart"></div>
+              <div style="height:30px"></div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <div class="card-title">Recent Activity</div>
+                <div class="card-subtitle">Latest platform events</div>
+              </div>
+              <span class="view-all-link">View all</span>
+            </div>
+            <div class="card-body activity-body">
+              <div class="activity-item"><div class="activity-dot" style="background:var(--success)"></div><div><div class="activity-text"><strong>Rahul Sharma</strong> listed a new Toyota Camry</div><div class="activity-time">2 min ago</div></div></div>
+              <div class="activity-item"><div class="activity-dot" style="background:var(--accent)"></div><div><div class="activity-text"><strong>Priya Mehta</strong> sent an inquiry on Honda City</div><div class="activity-time">15 min ago</div></div></div>
+              <div class="activity-item"><div class="activity-dot" style="background:var(--warning)"></div><div><div class="activity-text"><strong>Admin</strong> approved 5 new listings</div><div class="activity-time">1 hr ago</div></div></div>
+              <div class="activity-item"><div class="activity-dot" style="background:var(--danger)"></div><div><div class="activity-text"><strong>System</strong> flagged 2 listings for review</div><div class="activity-time">3 hr ago</div></div></div>
+              <div class="activity-item"><div class="activity-dot" style="background:var(--success)"></div><div><div class="activity-text"><strong>Ankit Verma</strong> completed a transaction</div><div class="activity-time">5 hr ago</div></div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="three-col">
+          <div class="card span-2">
+            <div class="card-header">
+              <div>
+                <div class="card-title">Recent Listings</div>
+                <div class="card-subtitle">Latest cars added to platform</div>
+              </div>
+              <button class="btn btn-primary btn-sm-action" onclick="navigate('cars', null)">View All</button>
+            </div>
+            <table class="data-table">
+              <thead>
+                <tr><th>Car</th><th>Seller</th><th>Price</th><th>Status</th><th>Date</th></tr>
+              </thead>
+              <tbody>
+                <tr><td><strong>Toyota Camry 2023</strong><br><span class="table-sub">Sedan · Auto · 45,000 km</span></td><td>Rahul S.</td><td class="price-cell">₹22.5L</td><td><span class="badge green">Active</span></td><td class="muted-cell">Feb 28</td></tr>
+                <tr><td><strong>Honda City 2022</strong><br><span class="table-sub">Sedan · Manual · 30,000 km</span></td><td>Priya M.</td><td class="price-cell">₹14.8L</td><td><span class="badge amber">Pending</span></td><td class="muted-cell">Feb 27</td></tr>
+                <tr><td><strong>Hyundai Creta 2021</strong><br><span class="table-sub">SUV · Auto · 58,000 km</span></td><td>Ankit V.</td><td class="price-cell">₹18.2L</td><td><span class="badge green">Active</span></td><td class="muted-cell">Feb 26</td></tr>
+                <tr><td><strong>Maruti Swift 2020</strong><br><span class="table-sub">Hatchback · Manual · 72,000 km</span></td><td>Sneha K.</td><td class="price-cell">₹8.5L</td><td><span class="badge red">Flagged</span></td><td class="muted-cell">Feb 25</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="card">
+            <div class="card-header"><div class="card-title">Quick Actions</div></div>
+            <div class="card-body">
+              <div class="quick-actions">
+                <button class="quick-btn" onclick="openModal('add-car-modal')"><span class="qicon">➕</span> Add Car</button>
+                <button class="quick-btn" onclick="navigate('users', null)"><span class="qicon">👤</span> Add User</button>
+                <button class="quick-btn" onclick="navigate('inquiries', null)"><span class="qicon">💬</span> Inquiries</button>
+                <button class="quick-btn" onclick="navigate('analytics', null)"><span class="qicon">📊</span> Reports</button>
+              </div>
+              <div class="platform-health">
+                <div class="health-title">Platform Health</div>
+                <div class="health-item"><div class="health-row"><span>Server Uptime</span><span class="health-val success">99.9%</span></div><div class="health-bar"><div class="health-fill" style="width:99.9%;background:var(--success)"></div></div></div>
+                <div class="health-item"><div class="health-row"><span>Storage Used</span><span class="health-val warning">74%</span></div><div class="health-bar"><div class="health-fill" style="width:74%;background:var(--warning)"></div></div></div>
+                <div class="health-item"><div class="health-row"><span>API Requests</span><span class="health-val accent">58%</span></div><div class="health-bar"><div class="health-fill" style="width:58%;background:var(--accent)"></div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== MANAGE CARS PAGE ===== -->
+    <div class="page" id="page-cars">
+
+      <!-- SKELETON -->
+      <div class="skeleton-wrapper" id="skel-cars">
+        <div class="skel-header skel-header-flex">
+          <div><div class="skel skel-title"></div><div class="skel skel-subtitle"></div></div>
+          <div class="skel-btn-group"><div class="skel skel-btn"></div><div class="skel skel-btn"></div></div>
+        </div>
+        <div class="skel-filters"><div class="skel skel-filter"></div><div class="skel skel-filter"></div><div class="skel skel-filter"></div><div class="skel skel-filter" style="margin-left:auto"></div></div>
+        <div class="car-grid">
+          <div class="skel-car-card"><div class="skel skel-car-img"></div><div class="skel-car-body"><div class="skel skel-line"></div><div class="skel skel-line short"></div><div class="skel skel-num"></div><div class="skel-btn-row"><div class="skel skel-smb"></div><div class="skel skel-smb"></div><div class="skel skel-smb"></div></div></div></div>
+          <div class="skel-car-card"><div class="skel skel-car-img"></div><div class="skel-car-body"><div class="skel skel-line"></div><div class="skel skel-line short"></div><div class="skel skel-num"></div><div class="skel-btn-row"><div class="skel skel-smb"></div><div class="skel skel-smb"></div><div class="skel skel-smb"></div></div></div></div>
+          <div class="skel-car-card"><div class="skel skel-car-img"></div><div class="skel-car-body"><div class="skel skel-line"></div><div class="skel skel-line short"></div><div class="skel skel-num"></div><div class="skel-btn-row"><div class="skel skel-smb"></div><div class="skel skel-smb"></div><div class="skel skel-smb"></div></div></div></div>
+          <div class="skel-car-card"><div class="skel skel-car-img"></div><div class="skel-car-body"><div class="skel skel-line"></div><div class="skel skel-line short"></div><div class="skel skel-num"></div><div class="skel-btn-row"><div class="skel skel-smb"></div><div class="skel skel-smb"></div><div class="skel skel-smb"></div></div></div></div>
+          <div class="skel-car-card"><div class="skel skel-car-img"></div><div class="skel-car-body"><div class="skel skel-line"></div><div class="skel skel-line short"></div><div class="skel skel-num"></div><div class="skel-btn-row"><div class="skel skel-smb"></div><div class="skel skel-smb"></div><div class="skel skel-smb"></div></div></div></div>
+          <div class="skel-car-card"><div class="skel skel-car-img"></div><div class="skel-car-body"><div class="skel skel-line"></div><div class="skel skel-line short"></div><div class="skel skel-num"></div><div class="skel-btn-row"><div class="skel skel-smb"></div><div class="skel skel-smb"></div><div class="skel skel-smb"></div></div></div></div>
+        </div>
+      </div>
+
+      <!-- REAL CONTENT -->
+      <div class="page-real" id="real-cars" style="display:none">
+        <div class="page-header flex-header">
+          <div>
+            <h2>Manage Cars</h2>
+            <p>1,248 total listings · 1,102 active</p>
+          </div>
+          <div class="page-actions">
+            <button class="btn btn-secondary">⬇️ Export</button>
+            <button class="btn btn-primary" onclick="openModal('add-car-modal')">➕ Add New Car</button>
+          </div>
+        </div>
+
+        <div class="filters-bar">
+          <span class="filter-label">Filter:</span>
+          <select class="filter-select"><option>All Categories</option><option>Sedan</option><option>SUV</option><option>Hatchback</option><option>Luxury</option></select>
+          <select class="filter-select"><option>All Status</option><option>Active</option><option>Pending</option><option>Flagged</option><option>Sold</option></select>
+          <select class="filter-select"><option>All Brands</option><option>Toyota</option><option>Honda</option><option>Hyundai</option><option>Maruti</option></select>
+          <select class="filter-select"><option>Price: All</option><option>Under ₹10L</option><option>₹10L–₹20L</option><option>₹20L–₹50L</option><option>Above ₹50L</option></select>
+          <div class="search-bar filter-search"><span class="s-icon">🔍</span><input type="text" placeholder="Search cars..."></div>
+        </div>
+
+        <div class="car-grid">
+          <div class="car-card"><div class="car-img" style="background:linear-gradient(135deg,#e0f0ff,#c7dff8)">🚗<div class="car-img-badge"><span class="badge green">Active</span></div></div><div class="car-info"><div class="car-name">Toyota Camry 2023</div><div class="car-meta">Sedan · Automatic · 45,000 km · Petrol</div><div class="car-price">₹22.5 Lakhs</div><div class="car-footer"><button class="btn-sm blue-sm" onclick="openModal('view-car-modal')">View</button><button class="btn-sm green-sm">Edit</button><button class="btn-sm red-sm">Delete</button></div></div></div>
+          <div class="car-card"><div class="car-img" style="background:linear-gradient(135deg,#fef9e7,#fdeaa7)">🚙<div class="car-img-badge"><span class="badge amber">Pending</span></div></div><div class="car-info"><div class="car-name">Honda City 2022</div><div class="car-meta">Sedan · Manual · 30,000 km · Petrol</div><div class="car-price">₹14.8 Lakhs</div><div class="car-footer"><button class="btn-sm blue-sm">View</button><button class="btn-sm green-sm">Approve</button><button class="btn-sm red-sm">Reject</button></div></div></div>
+          <div class="car-card"><div class="car-img" style="background:linear-gradient(135deg,#ecfdf5,#a7f3d0)">🚐<div class="car-img-badge"><span class="badge green">Active</span></div></div><div class="car-info"><div class="car-name">Hyundai Creta 2021</div><div class="car-meta">SUV · Automatic · 58,000 km · Diesel</div><div class="car-price">₹18.2 Lakhs</div><div class="car-footer"><button class="btn-sm blue-sm">View</button><button class="btn-sm green-sm">Edit</button><button class="btn-sm red-sm">Delete</button></div></div></div>
+          <div class="car-card"><div class="car-img" style="background:linear-gradient(135deg,#fef2f2,#fecaca)">🏎️<div class="car-img-badge"><span class="badge red">Flagged</span></div></div><div class="car-info"><div class="car-name">Maruti Swift 2020</div><div class="car-meta">Hatchback · Manual · 72,000 km · Petrol</div><div class="car-price">₹8.5 Lakhs</div><div class="car-footer"><button class="btn-sm blue-sm">View</button><button class="btn-sm amber-sm">Review</button><button class="btn-sm red-sm">Remove</button></div></div></div>
+          <div class="car-card"><div class="car-img" style="background:linear-gradient(135deg,#f3e8ff,#ddd6fe)">🚘<div class="car-img-badge"><span class="badge blue">Sold</span></div></div><div class="car-info"><div class="car-name">BMW 3 Series 2021</div><div class="car-meta">Sedan · Automatic · 28,000 km · Petrol</div><div class="car-price">₹48.0 Lakhs</div><div class="car-footer"><button class="btn-sm blue-sm">View</button><button class="btn-sm purple-sm">Archive</button><button class="btn-sm red-sm">Delete</button></div></div></div>
+          <div class="car-card"><div class="car-img" style="background:linear-gradient(135deg,#f0fdf4,#bbf7d0)">🚗<div class="car-img-badge"><span class="badge green">Active</span></div></div><div class="car-info"><div class="car-name">Kia Seltos 2023</div><div class="car-meta">SUV · Automatic · 12,000 km · Petrol</div><div class="car-price">₹20.5 Lakhs</div><div class="car-footer"><button class="btn-sm blue-sm">View</button><button class="btn-sm green-sm">Edit</button><button class="btn-sm red-sm">Delete</button></div></div></div>
+        </div>
+
+        <div class="pagination">
+          <div class="page-btn">‹</div>
+          <div class="page-btn active">1</div>
+          <div class="page-btn">2</div>
+          <div class="page-btn">3</div>
+          <div class="page-btn">...</div>
+          <div class="page-btn">12</div>
+          <div class="page-btn">›</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== USERS PAGE ===== -->
+    <div class="page" id="page-users">
+
+      <!-- SKELETON -->
+      <div class="skeleton-wrapper" id="skel-users">
+        <div class="skel-header skel-header-flex"><div><div class="skel skel-title"></div><div class="skel skel-subtitle"></div></div><div class="skel-btn-group"><div class="skel skel-btn"></div><div class="skel skel-btn"></div></div></div>
+        <div class="stats-grid"><div class="skel-stat-card"><div class="skel skel-num"></div><div class="skel skel-label"></div></div><div class="skel-stat-card"><div class="skel skel-num"></div><div class="skel skel-label"></div></div><div class="skel-stat-card"><div class="skel skel-num"></div><div class="skel skel-label"></div></div><div class="skel-stat-card"><div class="skel skel-num"></div><div class="skel skel-label"></div></div></div>
+        <div class="skel-card"><div class="skel skel-card-title"></div><div class="skel-table"><div class="skel skel-row"></div><div class="skel skel-row"></div><div class="skel skel-row"></div><div class="skel skel-row"></div><div class="skel skel-row"></div></div></div>
+      </div>
+
+      <!-- REAL CONTENT -->
+      <div class="page-real" id="real-users" style="display:none">
+        <div class="page-header flex-header">
+          <div><h2>User Management</h2><p>8,463 registered users · 312 new this month</p></div>
+          <div class="page-actions"><button class="btn btn-secondary">⬇️ Export</button><button class="btn btn-primary">➕ Add User</button></div>
+        </div>
+        <div class="stats-grid">
+          <div class="stat-card blue"><div class="stat-value">8,463</div><div class="stat-label">Total Users</div></div>
+          <div class="stat-card green"><div class="stat-value">7,901</div><div class="stat-label">Active</div></div>
+          <div class="stat-card amber"><div class="stat-value">312</div><div class="stat-label">New This Month</div></div>
+          <div class="stat-card red"><div class="stat-value">47</div><div class="stat-label">Suspended</div></div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">All Users</div>
+            <div style="display:flex;gap:8px">
+              <select class="filter-select"><option>All Roles</option><option>Buyer</option><option>Seller</option><option>Dealer</option></select>
+              <select class="filter-select"><option>All Status</option><option>Active</option><option>Suspended</option></select>
+            </div>
+          </div>
+          <table class="data-table">
+            <thead><tr><th>User</th><th>Role</th><th>Listings</th><th>Joined</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody>
+              <tr><td><div class="user-avatar-cell"><div class="user-av" style="background:linear-gradient(135deg,#2563eb,#7c3aed)">RS</div><div><div class="user-name">Rahul Sharma</div><div class="user-email">rahul@email.com</div></div></div></td><td><span class="badge blue">Seller</span></td><td class="fw6">12</td><td class="muted-cell">Jan 15, 2024</td><td><span class="badge green">Active</span></td><td><div class="action-btns"><button class="btn-sm blue-sm">View</button><button class="btn-sm red-sm">Suspend</button></div></td></tr>
+              <tr><td><div class="user-avatar-cell"><div class="user-av" style="background:linear-gradient(135deg,#10b981,#059669)">PM</div><div><div class="user-name">Priya Mehta</div><div class="user-email">priya@email.com</div></div></div></td><td><span class="badge green">Buyer</span></td><td class="fw6">0</td><td class="muted-cell">Feb 3, 2024</td><td><span class="badge green">Active</span></td><td><div class="action-btns"><button class="btn-sm blue-sm">View</button><button class="btn-sm red-sm">Suspend</button></div></td></tr>
+              <tr><td><div class="user-avatar-cell"><div class="user-av" style="background:linear-gradient(135deg,#f59e0b,#d97706)">AV</div><div><div class="user-name">Ankit Verma</div><div class="user-email">ankit@email.com</div></div></div></td><td><span class="badge amber">Dealer</span></td><td class="fw6">45</td><td class="muted-cell">Dec 12, 2023</td><td><span class="badge green">Active</span></td><td><div class="action-btns"><button class="btn-sm blue-sm">View</button><button class="btn-sm red-sm">Suspend</button></div></td></tr>
+              <tr><td><div class="user-avatar-cell"><div class="user-av" style="background:linear-gradient(135deg,#ef4444,#dc2626)">SK</div><div><div class="user-name">Sneha Kapoor</div><div class="user-email">sneha@email.com</div></div></div></td><td><span class="badge blue">Seller</span></td><td class="fw6">3</td><td class="muted-cell">Mar 5, 2024</td><td><span class="badge red">Suspended</span></td><td><div class="action-btns"><button class="btn-sm blue-sm">View</button><button class="btn-sm green-sm">Activate</button></div></td></tr>
+              <tr><td><div class="user-avatar-cell"><div class="user-av" style="background:linear-gradient(135deg,#8b5cf6,#6d28d9)">MK</div><div><div class="user-name">Manoj Kumar</div><div class="user-email">manoj@email.com</div></div></div></td><td><span class="badge amber">Dealer</span></td><td class="fw6">28</td><td class="muted-cell">Nov 20, 2023</td><td><span class="badge green">Active</span></td><td><div class="action-btns"><button class="btn-sm blue-sm">View</button><button class="btn-sm red-sm">Suspend</button></div></td></tr>
+            </tbody>
+          </table>
+          <div class="pagination pad-pagination">
+            <div class="page-btn">‹</div><div class="page-btn active">1</div><div class="page-btn">2</div><div class="page-btn">3</div><div class="page-btn">›</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== INQUIRIES PAGE ===== -->
+    <div class="page" id="page-inquiries">
+
+      <!-- SKELETON -->
+      <div class="skeleton-wrapper" id="skel-inquiries">
+        <div class="skel-header skel-header-flex"><div><div class="skel skel-title"></div><div class="skel skel-subtitle"></div></div><div class="skel-btn-group"><div class="skel skel-filter"></div><div class="skel skel-filter"></div></div></div>
+        <div class="skel-inq-list">
+          <div class="skel-inq-card"><div class="skel skel-inq-subj"></div><div class="skel skel-line"></div><div class="skel skel-line short"></div><div class="skel skel-chip"></div></div>
+          <div class="skel-inq-card"><div class="skel skel-inq-subj"></div><div class="skel skel-line"></div><div class="skel skel-line short"></div><div class="skel skel-chip"></div></div>
+          <div class="skel-inq-card"><div class="skel skel-inq-subj"></div><div class="skel skel-line"></div><div class="skel skel-line short"></div><div class="skel skel-chip"></div></div>
+        </div>
+      </div>
+
+      <!-- REAL CONTENT -->
+      <div class="page-real" id="real-inquiries" style="display:none">
+        <div class="page-header flex-header">
+          <div><h2>Customer Inquiries</h2><p>142 open · 7 urgent</p></div>
+          <div class="page-actions">
+            <select class="filter-select"><option>All Status</option><option>Open</option><option>In Progress</option><option>Resolved</option></select>
+            <select class="filter-select"><option>Sort: Newest</option><option>Sort: Oldest</option><option>Sort: Urgent</option></select>
+          </div>
+        </div>
+        <div class="inquiry-list">
+          <div class="inquiry-item"><div><div class="inq-subject">🚨 Pricing discrepancy on Honda City listing</div><div class="inq-body">The listed price for listing #HC2024 is ₹14.8L but the seller is quoting ₹16L in chat. There seems to be a discrepancy that needs to be resolved before I proceed.</div><div class="inq-meta"><span>👤 Priya Mehta</span><span>🚗 Honda City 2022</span><span>🕐 2 hours ago</span><span class="badge red">Urgent</span></div></div><div class="inq-actions"><button class="btn btn-primary">Respond</button><button class="btn btn-secondary">Resolve</button></div></div>
+          <div class="inquiry-item"><div><div class="inq-subject">Question about vehicle history report</div><div class="inq-body">How can I access the full vehicle history report for the Toyota Camry listed by Rahul Sharma? I need it before making my final decision.</div><div class="inq-meta"><span>👤 Rohit Jain</span><span>🚗 Toyota Camry 2023</span><span>🕐 5 hours ago</span><span class="badge amber">Open</span></div></div><div class="inq-actions"><button class="btn btn-primary">Respond</button><button class="btn btn-secondary">Resolve</button></div></div>
+          <div class="inquiry-item"><div><div class="inq-subject">Test drive scheduling assistance</div><div class="inq-body">I've been trying to schedule a test drive with the dealer for the past 3 days but I'm not getting any response. Can you please help facilitate this?</div><div class="inq-meta"><span>👤 Anjali Singh</span><span>🚗 Hyundai Creta 2021</span><span>🕐 1 day ago</span><span class="badge amber">Open</span></div></div><div class="inq-actions"><button class="btn btn-primary">Respond</button><button class="btn btn-secondary">Resolve</button></div></div>
+          <div class="inquiry-item resolved"><div><div class="inq-subject">EMI calculator not showing correct values</div><div class="inq-body">The EMI calculator on the listing page shows different values than what the bank is quoting. Please check if there's a bug in the calculation.</div><div class="inq-meta"><span>👤 Suresh Patel</span><span>🚗 BMW 3 Series 2021</span><span>🕐 2 days ago</span><span class="badge green">Resolved</span></div></div><div class="inq-actions"><button class="btn btn-secondary">View Thread</button></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== ANALYTICS PAGE ===== -->
+    <div class="page" id="page-analytics">
+
+      <!-- SKELETON -->
+      <div class="skeleton-wrapper" id="skel-analytics">
+        <div class="skel-header"><div class="skel skel-title"></div><div class="skel skel-subtitle"></div></div>
+        <div class="stats-grid"><div class="skel-stat-card"><div class="skel skel-icon"></div><div class="skel skel-num"></div><div class="skel skel-label"></div></div><div class="skel-stat-card"><div class="skel skel-icon"></div><div class="skel skel-num"></div><div class="skel skel-label"></div></div><div class="skel-stat-card"><div class="skel skel-icon"></div><div class="skel skel-num"></div><div class="skel skel-label"></div></div><div class="skel-stat-card"><div class="skel skel-icon"></div><div class="skel skel-num"></div><div class="skel skel-label"></div></div></div>
+        <div class="two-col"><div class="skel-card"><div class="skel skel-card-title"></div><div class="skel skel-chart"></div></div><div class="skel-card"><div class="skel skel-card-title"></div><div class="skel-lines"><div class="skel skel-progress"></div><div class="skel skel-progress"></div><div class="skel skel-progress"></div><div class="skel skel-progress"></div></div></div></div>
+      </div>
+
+      <!-- REAL CONTENT -->
+      <div class="page-real" id="real-analytics" style="display:none">
+        <div class="page-header"><h2>Analytics &amp; Reports</h2><p>Platform performance insights · March 2026</p></div>
+        <div class="stats-grid">
+          <div class="stat-card blue"><div class="stat-icon blue">👁️</div><div class="stat-value">2.4M</div><div class="stat-label">Total Page Views</div><div class="stat-change up">↑ 18% this month</div></div>
+          <div class="stat-card green"><div class="stat-icon green">🔄</div><div class="stat-value">4.2%</div><div class="stat-label">Conversion Rate</div><div class="stat-change up">↑ 0.8% this month</div></div>
+          <div class="stat-card amber"><div class="stat-icon amber">⏱️</div><div class="stat-value">3m 42s</div><div class="stat-label">Avg. Session Time</div><div class="stat-change up">↑ 22s improvement</div></div>
+          <div class="stat-card red"><div class="stat-icon red">📉</div><div class="stat-value">32.1%</div><div class="stat-label">Bounce Rate</div><div class="stat-change down">↓ down from 35.2%</div></div>
+        </div>
+        <div class="two-col">
+          <div class="card"><div class="card-header"><div><div class="card-title">Revenue Trend</div><div class="card-subtitle">Monthly revenue in ₹ Lakhs</div></div></div><div class="card-body"><div class="chart-area" id="chart2"></div><div style="height:30px"></div></div></div>
+          <div class="card"><div class="card-header"><div><div class="card-title">Top Categories</div><div class="card-subtitle">By listing count</div></div></div><div class="card-body"><div class="categories-list"><div class="cat-item"><div class="cat-row"><span class="fw6">SUV</span><span>38% · 473 listings</span></div><div class="health-bar"><div class="health-fill" style="width:38%;background:var(--accent)"></div></div></div><div class="cat-item"><div class="cat-row"><span class="fw6">Sedan</span><span>29% · 362 listings</span></div><div class="health-bar"><div class="health-fill" style="width:29%;background:#7c3aed"></div></div></div><div class="cat-item"><div class="cat-row"><span class="fw6">Hatchback</span><span>21% · 262 listings</span></div><div class="health-bar"><div class="health-fill" style="width:21%;background:var(--success)"></div></div></div><div class="cat-item"><div class="cat-row"><span class="fw6">Luxury</span><span>8% · 100 listings</span></div><div class="health-bar"><div class="health-fill" style="width:8%;background:var(--warning)"></div></div></div><div class="cat-item"><div class="cat-row"><span class="fw6">Electric</span><span>4% · 51 listings</span></div><div class="health-bar"><div class="health-fill" style="width:4%;background:var(--danger)"></div></div></div></div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== TRANSACTIONS PAGE ===== -->
+    <div class="page" id="page-transactions">
+
+      <!-- SKELETON -->
+      <div class="skeleton-wrapper" id="skel-transactions">
+        <div class="skel-header"><div class="skel skel-title"></div><div class="skel skel-subtitle"></div></div>
+        <div class="skel-card"><div class="skel skel-card-title"></div><div class="skel-table"><div class="skel skel-row"></div><div class="skel skel-row"></div><div class="skel skel-row"></div><div class="skel skel-row"></div><div class="skel skel-row"></div></div></div>
+      </div>
+
+      <!-- REAL CONTENT -->
+      <div class="page-real" id="real-transactions" style="display:none">
+        <div class="page-header"><h2>Transactions</h2><p>Financial overview and payment records</p></div>
+        <div class="card">
+          <div class="card-header"><div class="card-title">Recent Transactions</div><button class="btn btn-secondary" style="font-size:12px">⬇️ Download CSV</button></div>
+          <table class="data-table">
+            <thead><tr><th>ID</th><th>Buyer</th><th>Car</th><th>Amount</th><th>Date</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td class="txn-id">#TXN8821</td><td>Rohit Jain</td><td>Toyota Camry 2023</td><td class="success-val">₹22.5L</td><td class="muted-cell">Mar 1, 2026</td><td><span class="badge green">Completed</span></td></tr>
+              <tr><td class="txn-id">#TXN8820</td><td>Anjali Singh</td><td>BMW 3 Series 2021</td><td class="success-val">₹48.0L</td><td class="muted-cell">Feb 28, 2026</td><td><span class="badge green">Completed</span></td></tr>
+              <tr><td class="txn-id">#TXN8819</td><td>Deepak Nair</td><td>Kia Seltos 2023</td><td class="warning-val">₹20.5L</td><td class="muted-cell">Feb 27, 2026</td><td><span class="badge amber">Pending</span></td></tr>
+              <tr><td class="txn-id">#TXN8818</td><td>Kavya Reddy</td><td>Maruti Swift 2020</td><td class="danger-val">₹8.5L</td><td class="muted-cell">Feb 26, 2026</td><td><span class="badge red">Refunded</span></td></tr>
+              <tr><td class="txn-id">#TXN8817</td><td>Vikram Bose</td><td>Hyundai Creta 2021</td><td class="success-val">₹18.2L</td><td class="muted-cell">Feb 25, 2026</td><td><span class="badge green">Completed</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== SETTINGS PAGE ===== -->
+    <div class="page" id="page-settings">
+
+      <!-- SKELETON -->
+      <div class="skeleton-wrapper" id="skel-settings">
+        <div class="skel-header"><div class="skel skel-title"></div><div class="skel skel-subtitle"></div></div>
+        <div class="settings-grid">
+          <div class="skel-card"><div class="skel skel-line"></div><div class="skel skel-line" style="margin-top:6px"></div><div class="skel skel-line" style="margin-top:6px"></div><div class="skel skel-line" style="margin-top:6px"></div></div>
+          <div class="skel-card"><div class="skel skel-card-title"></div><div class="skel-form"><div class="form-row"><div class="skel skel-input"></div><div class="skel skel-input"></div></div><div class="skel skel-input" style="margin-bottom:12px"></div><div class="skel skel-input" style="margin-bottom:20px"></div><div class="skel skel-btn"></div></div></div>
+        </div>
+      </div>
+
+      <!-- REAL CONTENT -->
+      <div class="page-real" id="real-settings" style="display:none">
+        <div class="page-header"><h2>Settings</h2><p>Manage platform preferences and configurations</p></div>
+        <div class="settings-grid">
+          <div class="settings-nav">
+            <div class="settings-nav-item active" onclick="settingsTab(this, 'profile')">⚙️ Profile</div>
+            <div class="settings-nav-item" onclick="settingsTab(this, 'platform')">🌐 Platform</div>
+            <div class="settings-nav-item" onclick="settingsTab(this, 'notifications')">🔔 Notifications</div>
+            <div class="settings-nav-item" onclick="settingsTab(this, 'security')">🔒 Security</div>
+          </div>
+          <div>
+            <div id="settings-profile">
+              <div class="card"><div class="card-header"><div class="card-title">Admin Profile</div></div><div class="card-body"><div class="profile-top"><div class="avatar-img" style="width:64px;height:64px;font-size:24px;border-radius:16px">AD</div><div><div class="profile-name">Admin User</div><div class="profile-sub">admin@wheeldeal.com · Super Admin</div><button class="btn btn-secondary btn-xs">Change Photo</button></div></div><div class="form-row"><div class="form-group"><label>FIRST NAME</label><input class="form-input" value="Admin"></div><div class="form-group"><label>LAST NAME</label><input class="form-input" value="User"></div></div><div class="form-group"><label>EMAIL ADDRESS</label><input class="form-input" value="admin@wheeldeal.com"></div><div class="form-group"><label>PHONE NUMBER</label><input class="form-input" value="+91 98765 43210"></div><button class="btn btn-primary">Save Changes</button></div></div>
+            </div>
+            <div id="settings-platform" style="display:none">
+              <div class="card"><div class="card-header"><div class="card-title">Platform Settings</div></div><div class="card-body"><div class="settings-section"><div class="settings-section-title">General</div><div class="form-group"><label>PLATFORM NAME</label><input class="form-input" value="WheelDeal"></div><div class="form-group"><label>SUPPORT EMAIL</label><input class="form-input" value="support@wheeldeal.com"></div><div class="form-group"><label>MAX LISTING PHOTOS</label><input class="form-input" type="number" value="12"></div></div><div class="settings-section"><div class="settings-section-title">Listing Controls</div><div class="toggle-row"><div class="toggle-info"><div class="toggle-label">Auto-approve listings</div><div class="toggle-desc">Listings go live immediately without review</div></div><div class="toggle" onclick="this.classList.toggle('on')"></div></div><div class="toggle-row"><div class="toggle-info"><div class="toggle-label">Show vehicle history</div><div class="toggle-desc">Display VAHAN history on car pages</div></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div><div class="toggle-row"><div class="toggle-info"><div class="toggle-label">Enable EMI calculator</div><div class="toggle-desc">Show loan calculator on listing pages</div></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div></div><button class="btn btn-primary">Save Settings</button></div></div>
+            </div>
+            <div id="settings-notifications" style="display:none">
+              <div class="card"><div class="card-header"><div class="card-title">Notification Preferences</div></div><div class="card-body"><div class="toggle-row"><div class="toggle-info"><div class="toggle-label">New inquiry alerts</div><div class="toggle-desc">Get notified when users submit new inquiries</div></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div><div class="toggle-row"><div class="toggle-info"><div class="toggle-label">New listing submissions</div><div class="toggle-desc">Alert when a new car is listed for review</div></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div><div class="toggle-row"><div class="toggle-info"><div class="toggle-label">Flagged content alerts</div><div class="toggle-desc">Immediate alerts for flagged listings or users</div></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div><div class="toggle-row"><div class="toggle-info"><div class="toggle-label">Transaction completions</div><div class="toggle-desc">Notify on successful transaction completions</div></div><div class="toggle" onclick="this.classList.toggle('on')"></div></div><div class="toggle-row"><div class="toggle-info"><div class="toggle-label">Weekly summary email</div><div class="toggle-desc">Receive a summary report every Monday</div></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div></div></div>
+            </div>
+            <div id="settings-security" style="display:none">
+              <div class="card"><div class="card-header"><div class="card-title">Security Settings</div></div><div class="card-body"><div class="settings-section"><div class="settings-section-title">Change Password</div><div class="form-group"><label>CURRENT PASSWORD</label><input class="form-input" type="password" placeholder="••••••••"></div><div class="form-group"><label>NEW PASSWORD</label><input class="form-input" type="password" placeholder="••••••••"></div><div class="form-group"><label>CONFIRM NEW PASSWORD</label><input class="form-input" type="password" placeholder="••••••••"></div><button class="btn btn-primary" style="margin-bottom:24px">Update Password</button></div><div class="settings-section"><div class="settings-section-title">Two-Factor Authentication</div><div class="toggle-row"><div class="toggle-info"><div class="toggle-label">Enable 2FA</div><div class="toggle-desc">Require OTP on login for extra security</div></div><div class="toggle" onclick="this.classList.toggle('on')"></div></div></div></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /main -->
+
+<!-- ADD CAR MODAL -->
+<div class="modal-bg" id="add-car-modal" onclick="closeModal('add-car-modal', event)">
+  <div class="modal">
+    <div class="modal-title">Add New Car Listing</div>
+    <div class="form-row"><div class="form-group"><label>MAKE</label><input class="form-input" placeholder="e.g. Toyota"></div><div class="form-group"><label>MODEL</label><input class="form-input" placeholder="e.g. Camry"></div></div>
+    <div class="form-row"><div class="form-group"><label>YEAR</label><input class="form-input" type="number" placeholder="2023"></div><div class="form-group"><label>PRICE (₹ Lakhs)</label><input class="form-input" type="number" placeholder="22.5"></div></div>
+    <div class="form-row"><div class="form-group"><label>CATEGORY</label><select class="form-input"><option>Sedan</option><option>SUV</option><option>Hatchback</option><option>Luxury</option></select></div><div class="form-group"><label>TRANSMISSION</label><select class="form-input"><option>Manual</option><option>Automatic</option></select></div></div>
+    <div class="form-group"><label>KM DRIVEN</label><input class="form-input" type="number" placeholder="45000"></div>
+    <div class="modal-actions"><button class="btn btn-secondary" onclick="closeModal('add-car-modal')">Cancel</button><button class="btn btn-primary">Add Listing</button></div>
+  </div>
+</div>
+
+<!-- VIEW CAR MODAL -->
+<div class="modal-bg" id="view-car-modal" onclick="closeModal('view-car-modal', event)">
+  <div class="modal">
+    <div class="modal-title">Toyota Camry 2023</div>
+    <div class="car-modal-img">🚗</div>
+    <div class="car-modal-grid">
+      <div><span class="modal-field-label">PRICE</span><div class="modal-price">₹22.5 Lakhs</div></div>
+      <div><span class="modal-field-label">STATUS</span><div style="margin-top:2px"><span class="badge green">Active</span></div></div>
+      <div><span class="modal-field-label">CATEGORY</span><div class="fw6">Sedan</div></div>
+      <div><span class="modal-field-label">KM DRIVEN</span><div class="fw6">45,000 km</div></div>
+      <div><span class="modal-field-label">FUEL TYPE</span><div class="fw6">Petrol</div></div>
+      <div><span class="modal-field-label">TRANSMISSION</span><div class="fw6">Automatic</div></div>
+      <div><span class="modal-field-label">SELLER</span><div class="fw6">Rahul Sharma</div></div>
+      <div><span class="modal-field-label">LISTED ON</span><div class="fw6">Feb 28, 2026</div></div>
+    </div>
+    <div class="modal-actions"><button class="btn btn-danger" onclick="closeModal('view-car-modal')">Remove Listing</button><button class="btn btn-secondary" onclick="closeModal('view-car-modal')">Close</button><button class="btn btn-primary">Edit Listing</button></div>
+  </div>
+</div>
+{% endblock content %}
+
+{% block scripts %}
+<script src="{% static 'js/adminhome.js' %}"></script>
+{% endblock scripts %}
+</html>
+

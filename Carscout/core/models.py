@@ -37,14 +37,22 @@ class User(AbstractBaseUser):
         ('Buyer','Buyer'),
         ('Seller','Seller'),
     )
+    gender_choices = (
+        ('Male','Male'),
+        ('Female','Female'),
+    )
     role = models.CharField(max_length=10,choices=role_choice,default='Buyer')
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    
-    
+    first_name = models.CharField(max_length=20,null=True)
+    last_name = models.CharField(max_length=20,null=True)
+    MobileNo = models.BigIntegerField(max_length=20,null=True)
+    gender = models.CharField(max_length=10,choices=gender_choices,default='Male')
+
+
     objects = UserManager()
 
     #override userName filed

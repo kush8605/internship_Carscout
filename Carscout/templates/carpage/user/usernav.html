@@ -1,0 +1,28 @@
+{% load static %}
+{% comment %} <p>{{ request.user }}</p> {% endcomment %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CarScout - Home</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/user/userhome.css' %}">
+</head>
+<body>
+<!-- ================= NAVBAR ================= -->
+<header class="navbar">
+  <div class="logo">🛞 Wheel<span>Deal</span></div>
+
+  <nav>
+    <a href="#">Buy Car</a>
+    <a href="#">Sell Car</a>
+    <a href="#">Compare</a>
+    <a href="#">Finance</a>
+  </nav>
+
+  <button class="login-btn">Login</button>
+</header>
+
+</body>
+</html>
+

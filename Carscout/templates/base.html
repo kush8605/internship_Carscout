@@ -3,14 +3,24 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    {% comment %} <link rel="stylesheet" href="{% static 'css/style.css' %}"> {% endcomment %}
 </head>
 <body>
-
-    {% if request.user.role = "admin" %}
-        {% include 'adminhome.html' %}
-    {% comment %} {% else %}
-        {% include 'home.html' %}  {% endcomment %}
+    {% block navbar %}
+    {% if request.user.role == 'Admin' %}
+        {% include 'carpage/admin/adminnav.html' %}
+    {% elif request.user.role == 'Buyer' %}
+        {% include 'carpage/user/usernav.html' %}
+    {% elif request.user.role == 'Seller' %}
+        {% include 'carpage/user/usernav.html' %}   
     {% endif %}
-</body>
+    {% endblock navbar %}
+
+    {% block content %}
+    {% endblock %}
+    
+    {% block scripts %}
+    {% endblock scripts %}
+    
+</body>    
 </html>

@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/models/car_listing.css' %}">
+
+<!-- ===== FILTER BAR ===== -->
+<section class="filter-section">
+  <form method="GET" action="{% url 'car_listing' %}">
+    
+    <div class="filter-grid">
+
+      <div class="filter-item">
+        <label>Brand</label>
+        <input type="text" name="brand" placeholder="e.g. Honda" value="{{ request.GET.brand }}">
+      </div>
+
+      <div class="filter-item">
+        <label>Fuel Type</label>
+        <select name="fuel">
+          <option value="">All</option>
+          <option value="Petrol" {% if request.GET.fuel == 'Petrol' %}selected{% endif %}>Petrol</option>
+          <option value="Diesel" {% if request.GET.fuel == 'Diesel' %}selected{% endif %}>Diesel</option>
+          <option value="CNG" {% if request.GET.fuel == 'CNG' %}selected{% endif %}>CNG</option>
+          <option value="Electric" {% if request.GET.fuel == 'Electric' %}selected{% endif %}>Electric</option>
+        </select>
+      </div>
+
+      <div class="filter-item">
+        <label>Transmission</label>
+        <select name="transmission">
+          <option value="">All</option>
+          <option value="Manual" {% if request.GET.transmission == 'Manual' %}selected{% endif %}>Manual</option>
+          <option value="Automatic" {% if request.GET.transmission == 'Automatic' %}selected{% endif %}>Automatic</option>
+        </select>
+      </div>
+
+      <div class="filter-item">
+        <label>City</label>
+        <input type="text" name="city" placeholder="e.g. Mumbai" value="{{ request.GET.city }}">
+      </div>
+
+      <div class="filter-item">
+        <label>Min Price (₹)</label>
+        <input type="number" name="min_price" placeholder="e.g. 500000" value="{{ request.GET.min_price }}">
+      </div>
+
+      <div class="filter-item">
+        <label>Max Price (₹)</label>
+        <input type="number" name="max_price" placeholder="e.g. 1500000" value="{{ request.GET.max_price }}">
+      </div>
+
+    </div>
+
+    <div class="filter-buttons">
+      <button type="submit" class="btn-search">Search Cars</button>
+      <a href="{% url 'car_listing' %}" class="btn-clear">Clear Filters</a>
+    </div>
+
+  </form>
+</section>
+
+
+<!-- ===== CAR RESULTS ===== -->
+<section class="cars-section">
+
+  <h2>{{ cars.count }} Cars Found</h2>
+
+  {% if cars %}
+  <div class="car-grid">
+    {% for car in cars %}
+    <div class="car-card">
+      
+      <!-- CAR IMAGE -->
+      {% with car.images.first as img %}
+        {% if img %}
+          <img src="{{ img.image_url }}" alt="{{ car.brand }} {{ car.model }}">
+        {% else %}
+          <div class="no-image">No Image</div>
+        {% endif %}
+      {% endwith %}
+
+      <!-- CAR INFO -->
+      <div class="car-info">
+        <h3>{{ car.brand }} {{ car.model }} {{ car.year }}</h3>
+        <p class="car-price">₹{{ car.price }}</p>
+
+        <div class="car-tags">
+          <span>⛽ {{ car.fuel_type }}</span>
+          <span>⚙️ {{ car.transmission }}</span>
+          <span>📍 {{ car.city }}</span>
+          <span>🛣️ {{ car.km_driven }} km</span>
+        </div>
+
+        <a href="{% url 'car_detail' car.id %}" class="btn-view">View Details</a>
+
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  {% else %}
+  <div class="no-results">
+    <h3>No cars found matching your filters.</h3>
+    <a href="{% url 'car_listing' %}">Clear filters and try again</a>
+  </div>
+  {% endif %}
+
+</section>
+
+{% endblock content %}

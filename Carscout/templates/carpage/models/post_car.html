@@ -1,0 +1,203 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/models/post_car.css' %}">
+
+<div class="post-wrapper">
+
+  <!-- LEFT — Form -->
+  <div class="post-left">
+    <div class="post-header">
+      <h1>List Your Car</h1>
+      <p>Fill in the details below and get your car in front of thousands of buyers</p>
+    </div>
+
+    <form method="POST" action="{% url 'post_car' %}">
+      {% csrf_token %}
+
+      <!-- BASIC INFO -->
+      <div class="form-section">
+        <h3>Basic Information</h3>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Brand</label>
+            {{ car_form.brand }}
+          </div>
+          <div class="form-group">
+            <label>Model</label>
+            {{ car_form.model }}
+          </div>
+          <div class="form-group">
+            <label>Year</label>
+            {{ car_form.year }}
+          </div>
+          <div class="form-group">
+            <label>Price (₹)</label>
+            {{ car_form.price }}
+          </div>
+          <div class="form-group">
+            <label>KM Driven</label>
+            {{ car_form.km_driven }}
+          </div>
+          <div class="form-group">
+            <label>City</label>
+            {{ car_form.city }}
+          </div>
+        </div>
+      </div>
+
+      <!-- TECHNICAL INFO -->
+      <div class="form-section">
+        <h3>Technical Details</h3>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Fuel Type</label>
+            {{ car_form.fuel_type }}
+          </div>
+          <div class="form-group">
+            <label>Transmission</label>
+            {{ car_form.transmission }}
+          </div>
+          <div class="form-group">
+            <label>Color</label>
+            {{ car_form.color }}
+          </div>
+          <div class="form-group">
+            <label>Mileage (km/l)</label>
+            {{ car_form.mileage }}
+          </div>
+          <div class="form-group">
+            <label>Engine (cc)</label>
+            {{ car_form.engine_cc }}
+          </div>
+          <div class="form-group">
+            <label>Seating Capacity</label>
+            {{ car_form.seating_capacity }}
+          </div>
+          <div class="form-group">
+            <label>Ownership</label>
+            {{ car_form.ownership }}
+          </div>
+        </div>
+      </div>
+
+      <!-- DESCRIPTION -->
+      <div class="form-section">
+        <h3>Description</h3>
+        <div class="form-group full-width">
+          {{ car_form.description }}
+        </div>
+      </div>
+
+     <!-- CAR IMAGE -->
+<div class="form-section">
+  <h3>Car Images</h3>
+  
+  <div id="image-fields">
+    <div class="image-row">
+      <div class="form-group">
+        <label>Image URL</label>
+        <input type="url" name="image_url[]" placeholder="Paste image URL here">
+      </div>
+      <div class="form-group">
+        <label>Caption</label>
+        <input type="text" name="caption[]" placeholder="e.g. Front View">
+      </div>
+    </div>
+  </div>
+
+  <button type="button" class="btn-add-image" id="addImageBtn">
+    + Add Another Image
+  </button>
+
+</div>
+
+      <!-- ERRORS -->
+      {% if car_form.errors %}
+      <div class="form-errors">
+        {% for field in car_form %}
+          {% for error in field.errors %}
+            <p>{{ field.label }}: {{ error }}</p>
+          {% endfor %}
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      <!-- SUBMIT -->
+      <button type="submit" class="btn-submit">
+        🚗 Post My Car
+      </button>
+
+    </form>
+  </div>
+
+  <!-- RIGHT — Info Panel -->
+  <div class="post-right">
+
+    <div class="info-card">
+      <div class="info-icon">📋</div>
+      <h3>How It Works</h3>
+      <ul>
+        <li>✅ Fill in your car details</li>
+        <li>✅ Add an image URL</li>
+        <li>✅ Submit for admin review</li>
+        <li>✅ Go live once approved</li>
+      </ul>
+    </div>
+
+    <div class="info-card tips">
+      <div class="info-icon">💡</div>
+      <h3>Tips for Quick Sale</h3>
+      <ul>
+        <li>Use a clear front photo</li>
+        <li>Set a competitive price</li>
+        <li>Write a detailed description</li>
+        <li>Mention service history</li>
+      </ul>
+    </div>
+
+    <div class="info-card highlight">
+      <div class="info-icon">🚀</div>
+      <h3>Why WheelDeal?</h3>
+      <ul>
+        <li>8,000+ active buyers</li>
+        <li>Verified buyer contacts</li>
+        <li>Fast approval process</li>
+        <li>100% free to list</li>
+      </ul>
+    </div>
+
+  </div>
+
+</div>
+
+{% if messages %}
+<div class="toast-messages">
+  {% for message in messages %}
+    <div class="toast {{ message.tags }}">{{ message }}</div>
+  {% endfor %}
+</div>
+{% endif %}
+{% endblock content %}
+{% block scripts %}
+<script>
+  document.getElementById('addImageBtn').addEventListener('click', function() {
+    const container = document.getElementById('image-fields');
+    const newRow = document.createElement('div');
+    newRow.classList.add('image-row');
+    newRow.innerHTML = `
+      <div class="form-group">
+        <label>Image URL</label>
+        <input type="url" name="image_url[]" placeholder="Paste image URL here">
+      </div>
+      <div class="form-group">
+        <label>Caption</label>
+        <input type="text" name="caption[]" placeholder="e.g. Side View">
+      </div>
+      <button type="button" class="btn-remove-image" onclick="this.parentElement.remove()">✕ Remove</button>
+    `;
+    container.appendChild(newRow);
+  });
+</script>
+{% endblock scripts %}

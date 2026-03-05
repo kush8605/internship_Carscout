@@ -1,0 +1,154 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/models/car_detail.css' %}">
+
+<div class="detail-wrapper">
+
+  <!-- LEFT — Images + Specs -->
+  <div class="detail-left">
+
+    <!-- Main Image -->
+    {% with car.images.first as img %}
+      {% if img %}
+        <img class="main-image" src="{{ img.image_url }}" alt="{{ car.brand }} {{ car.model }}">
+      {% else %}
+        <div class="no-image">No Image Available</div>
+      {% endif %}
+    {% endwith %}
+
+    <!-- Thumbnail Images -->
+    {% if car.images.count > 1 %}
+    <div class="thumbnails">
+      {% for img in car.images.all %}
+        <img src="{{ img.image_url }}" alt="{{ img.caption }}" onclick="document.querySelector('.main-image').src=this.src">
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Specs Table -->
+    <div class="specs-box">
+      <h3>Car Specifications</h3>
+      <div class="specs-grid">
+        <div class="spec-item"><span class="spec-label">Brand</span><span class="spec-value">{{ car.brand }}</span></div>
+        <div class="spec-item"><span class="spec-label">Model</span><span class="spec-value">{{ car.model }}</span></div>
+        <div class="spec-item"><span class="spec-label">Year</span><span class="spec-value">{{ car.year }}</span></div>
+        <div class="spec-item"><span class="spec-label">Fuel Type</span><span class="spec-value">{{ car.fuel_type }}</span></div>
+        <div class="spec-item"><span class="spec-label">Transmission</span><span class="spec-value">{{ car.transmission }}</span></div>
+        <div class="spec-item"><span class="spec-label">KM Driven</span><span class="spec-value">{{ car.km_driven }} km</span></div>
+        <div class="spec-item"><span class="spec-label">Color</span><span class="spec-value">{{ car.color }}</span></div>
+        <div class="spec-item"><span class="spec-label">Engine</span><span class="spec-value">{{ car.engine_cc }} cc</span></div>
+        <div class="spec-item"><span class="spec-label">Mileage</span><span class="spec-value">{{ car.mileage }} km/l</span></div>
+        <div class="spec-item"><span class="spec-label">Seating</span><span class="spec-value">{{ car.seating_capacity }} Seats</span></div>
+        <div class="spec-item"><span class="spec-label">Ownership</span><span class="spec-value">{{ car.get_ownership_display }}</span></div>
+        <div class="spec-item"><span class="spec-label">City</span><span class="spec-value">{{ car.city }}</span></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- RIGHT — Info + Actions -->
+  <div class="detail-right">
+
+    <!-- Title + Price -->
+    <div class="car-header">
+      <h1>{{ car.brand }} {{ car.model }} {{ car.year }}</h1>
+      <div class="price">₹{{ car.price }}</div>
+      <span class="status-badge {{ car.status }}">{{ car.status|capfirst }}</span>
+    </div>
+
+    <!-- Description -->
+    <div class="description-box">
+      <h3>Description</h3>
+      <p>{{ car.description }}</p>
+    </div>
+
+    <!-- Seller Info -->
+    <div class="seller-box">
+      <h3>Seller Details</h3>
+      <div class="seller-info">
+        <div class="seller-avatar">{{ car.seller.first_name|first }}{{ car.seller.last_name|first }}</div>
+        <div>
+          <p class="seller-name">{{ car.seller.first_name }} {{ car.seller.last_name }}</p>
+          <p class="seller-email">{{ car.seller.email }}</p>
+          <p class="seller-city">📍 {{ car.seller.MobileNo }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="action-buttons">
+      <a href="#" class="btn-inquiry">💬 Send Inquiry</a>
+      <a href="#" class="btn-testdrive">🚗 Book Test Drive</a>
+    </div>
+
+    <!-- LIGHTBOX -->
+    <div class="lightbox" id="lightbox">
+        <span class="lightbox-close" id="lightboxClose">✕</span>
+        <img id="lightboxImg" src="" alt="Full View">
+    </div>
+
+    <!-- Reviews -->
+    <div class="reviews-box">
+      <h3>Reviews ({{ car.reviews.count }})</h3>
+      {% if car.reviews.all %}
+        {% for review in car.reviews.all %}
+        <div class="review-card">
+          <div class="review-header">
+            <strong>{{ review.reviewer.first_name }}</strong>
+            <span class="stars">
+              {% for i in "12345" %}
+                {% if forloop.counter <= review.rating %}⭐{% endif %}
+              {% endfor %}
+            </span>
+          </div>
+          <p>{{ review.comment }}</p>
+          <small>{{ review.created_at|date:"d M Y" }}</small>
+        </div>
+        {% endfor %}
+      {% else %}
+        <p class="no-reviews">No reviews yet for this car.</p>
+      {% endif %}
+    </div>
+    
+
+  </div>
+</div>
+
+{% endblock content %}
+
+{% block scripts %}
+<script>
+  const lightbox = document.getElementById('lightbox');
+  const lightboxImg = document.getElementById('lightboxImg');
+
+  // Open lightbox on main image click
+  document.querySelector('.main-image').addEventListener('click', function() {
+    lightboxImg.src = this.src;
+    lightbox.classList.add('active');
+  });
+
+  // Thumbnail click changes main image
+  document.querySelectorAll('.thumbnails img').forEach(thumb => {
+    thumb.addEventListener('click', () => {
+      document.querySelector('.main-image').src = thumb.src;
+    });
+  });
+
+  // Close lightbox
+  document.getElementById('lightboxClose').addEventListener('click', () => {
+    lightbox.classList.remove('active');
+  });
+
+  // Close on background click
+  lightbox.addEventListener('click', (e) => {
+    if (e.target === lightbox) lightbox.classList.remove('active');
+  });
+
+  // Close on Escape key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') lightbox.classList.remove('active');
+  });
+</script>
+{% endblock scripts %}
