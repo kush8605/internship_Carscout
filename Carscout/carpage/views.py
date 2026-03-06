@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from .decorators import role_required
 from carpage.models import Car, CarImage
 from django.contrib import messages
-from .forms import CarForm, CarImageForm
+from .forms import CarForm, CarImageForm , EditProfileForm
 
 
 
@@ -130,6 +130,22 @@ def delete_car_image(request, image_id):
     image.delete()
     messages.success(request, 'Image deleted!')
     return redirect('my_listing')
+
+
+def profile(request):
+    return render(request, 'carpage/models/profile.html', {'user': request.user})
+
+@login_required
+def edit_profile(request):
+    if request.method == 'POST':
+        # request.FILES handles the image upload automatically
+        form = EditProfileForm(request.POST, request.FILES, instance=request.user)
+        if form.is_valid():
+            form.save()
+            return redirect('profile')
+    else:
+        form = EditProfileForm(instance=request.user)
+    return render(request, 'carpage/models/edit_profile.html', {'form': form})
 
 
 

@@ -1,5 +1,6 @@
 from django import forms
 from carpage.models import Car, CarImage
+from core.models import User
 
 
 class CarForm(forms.ModelForm):
@@ -33,4 +34,17 @@ class CarImageForm(forms.ModelForm):
         widgets = {
             'image_url': forms.URLInput(attrs={'placeholder': 'Paste image URL here'}),
             'caption':   forms.TextInput(attrs={'placeholder': 'e.g. Front View'}),
+        }
+
+class EditProfileForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = [
+            'first_name', 'last_name', 'MobileNo',
+            'gender','profile_picture'
+        ]
+        widgets = {
+            'first_name':       forms.TextInput(attrs={'placeholder': 'Enter first name'}),
+            'last_name':        forms.TextInput(attrs={'placeholder': 'Enter last name'}),
+            'MobileNo':         forms.NumberInput(attrs={'placeholder': 'Enter mobile number'}),
         }

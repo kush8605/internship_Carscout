@@ -1,0 +1,186 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/models/edit_profile.css' %}">
+
+<div class="edit-wrapper">
+
+  <!-- LEFT — Form -->
+  <div class="edit-left">
+
+    <div class="edit-header">
+      <h1>Edit Profile</h1>
+      <p>Update your personal information</p>
+    </div>
+
+    <form method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+
+      <!-- PROFILE PICTURE -->
+      <div class="form-section">
+        <h3>Profile Picture</h3>
+        <div class="picture-upload">
+
+          <!-- Current Picture Preview -->
+          <div class="current-avatar">
+            {% if request.user.profile_picture %}
+              <img src="{{ request.user.profile_picture.url }}" 
+                   alt="Profile" id="avatarPreview">
+            {% else %}
+              <div class="avatar-placeholder" id="avatarPlaceholder">
+                {{ request.user.first_name|first }}{{ request.user.last_name|first }}
+              </div>
+              <img src="" alt="" id="avatarPreview" style="display:none;">
+            {% endif %}
+          </div>
+
+          <!-- Upload Button -->
+          <div class="upload-info">
+            <label for="id_profile_picture" class="btn-upload">
+              📷 Choose Photo
+            </label>
+            {{ form.profile_picture }}
+            <p class="upload-hint">JPG, PNG accepted. Max 5MB.</p>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- PERSONAL INFO -->
+      <div class="form-section">
+        <h3>Personal Information</h3>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>First Name</label>
+            {{ form.first_name }}
+          </div>
+          <div class="form-group">
+            <label>Last Name</label>
+            {{ form.last_name }}
+          </div>
+          <div class="form-group">
+            <label>Mobile Number</label>
+            {{ form.MobileNo }}
+          </div>
+          <div class="form-group">
+            <label>Gender</label>
+            {{ form.gender }}
+          </div>
+          <div class="form-group full-width">
+            <label>City</label>
+            {{ form.city }}
+          </div>
+        </div>
+      </div>
+
+      <!-- BIO -->
+      <div class="form-section">
+        <h3>Bio</h3>
+        <div class="form-group full-width">
+          {{ form.bio }}
+        </div>
+      </div>
+
+      <!-- ERRORS -->
+      {% if form.errors %}
+      <div class="form-errors">
+        {% for field in form %}
+          {% for error in field.errors %}
+            <p>{{ field.label }}: {{ error }}</p>
+          {% endfor %}
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      <!-- BUTTONS -->
+      <div class="edit-buttons">
+        <button type="submit" class="btn-save">💾 Save Changes</button>
+        <a href="{% url 'profile' %}" class="btn-cancel">Cancel</a>
+      </div>
+
+    </form>
+  </div>
+
+  <!-- RIGHT — Preview Card -->
+  <div class="edit-right">
+    <div class="preview-card">
+      <h3>Profile Preview</h3>
+
+      <div class="preview-avatar">
+        {% if request.user.profile_picture %}
+          <img src="{{ request.user.profile_picture.url }}" alt="Preview">
+        {% else %}
+          <div class="avatar-placeholder">
+            {{ request.user.first_name|first }}{{ request.user.last_name|first }}
+          </div>
+        {% endif %}
+      </div>
+
+      <p class="preview-name">
+        {{ request.user.first_name }} {{ request.user.last_name }}
+      </p>
+      <p class="preview-email">{{ request.user.email }}</p>
+      <span class="role-badge {{ request.user.role|lower }}">
+        {{ request.user.role }}
+      </span>
+
+      {% if request.user.city %}
+        <p class="preview-city">📍 {{ request.user.city }}</p>
+      {% endif %}
+
+      {% if request.user.bio %}
+        <p class="preview-bio">{{ request.user.bio }}</p>
+      {% endif %}
+
+    </div>
+
+    <!-- Quick Links -->
+    <div class="quick-links">
+      <h3>Quick Links</h3>
+      <a href="{% url 'profile' %}">👤 View Profile</a>
+      {% if request.user.role == 'Seller' %}
+        <a href="{% url 'my_listing' %}">🚗 My Listings</a>
+        <a href="{% url 'post_car' %}">➕ Post a Car</a>
+      {% endif %}
+      {% if request.user.role == 'Buyer' %}
+        <a href="{% url 'car_listing' %}">🔍 Browse Cars</a>
+      {% endif %}
+    </div>
+
+  </div>
+</div>
+
+{% if messages %}
+<div class="toast-messages">
+  {% for message in messages %}
+    <div class="toast {{ message.tags }}">{{ message }}</div>
+  {% endfor %}
+</div>
+{% endif %}
+
+{% endblock content %}
+
+{% block scripts %}
+<script>
+  // Live image preview when user selects a photo
+  document.getElementById('id_profile_picture').addEventListener('change', function() {
+    const file = this.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const preview = document.getElementById('avatarPreview');
+        const placeholder = document.getElementById('avatarPlaceholder');
+        if (preview) {
+          preview.src = e.target.result;
+          preview.style.display = 'block';
+        }
+        if (placeholder) {
+          placeholder.style.display = 'none';
+        }
+      }
+      reader.readAsDataURL(file);
+    }
+  });
+</script>
+{% endblock scripts %}
