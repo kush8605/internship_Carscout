@@ -43,7 +43,7 @@ class User(AbstractBaseUser):
     )
     role = models.CharField(max_length=10,choices=role_choice,default='Buyer')
     is_active = models.BooleanField(default=True)
-    profile_picture = models.ImageField(upload_to='media/profile_images/', blank=True, null=True)
+    profile_picture = models.ImageField(upload_to='profile_images/', blank=True, null=True)
     is_staff = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)

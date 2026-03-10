@@ -1,0 +1,399 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/user/buyer_home.css' %}">
+
+<!-- ===== SPLASH SCREEN ===== -->
+<div class="splash" id="splash">
+  <div class="splash-bg"></div>
+  <div class="splash-content">
+    <div class="splash-wheel">
+      <svg viewBox="0 0 120 120" class="wheel-svg">
+        <circle cx="60" cy="60" r="54" fill="none" stroke="#ff4d30" stroke-width="3" opacity="0.3"/>
+        <circle cx="60" cy="60" r="54" fill="none" stroke="#ff4d30" stroke-width="3"
+          stroke-dasharray="339" stroke-dashoffset="339" class="wheel-circle"/>
+        <line x1="60" y1="6" x2="60" y2="60" stroke="#ff4d30" stroke-width="2" opacity="0" class="spoke"/>
+        <line x1="114" y1="60" x2="60" y2="60" stroke="#ff4d30" stroke-width="2" opacity="0" class="spoke" style="animation-delay:0.1s"/>
+        <line x1="60" y1="114" x2="60" y2="60" stroke="#ff4d30" stroke-width="2" opacity="0" class="spoke" style="animation-delay:0.2s"/>
+        <line x1="6" y1="60" x2="60" y2="60" stroke="#ff4d30" stroke-width="2" opacity="0" class="spoke" style="animation-delay:0.3s"/>
+        <circle cx="60" cy="60" r="10" fill="#ff4d30" opacity="0" class="hub"/>
+        <circle cx="60" cy="60" r="5" fill="#0d0d0d" opacity="0" class="hub" style="animation-delay:0.1s"/>
+      </svg>
+    </div>
+    <div class="splash-brand">
+      <span class="splash-wheel-text">WHEEL</span>
+      <span class="splash-deal-text">DEAL</span>
+    </div>
+    <p class="splash-tagline">Welcome back, {{ request.user.first_name }} 👋</p>
+    <div class="splash-loader"><div class="splash-loader-bar"></div></div>
+  </div>
+</div>
+
+<!-- ===== MAIN CONTENT ===== -->
+<div class="main-content" id="mainContent">
+
+  <!-- ===== HERO ===== -->
+  <section class="hero">
+    <div class="hero-bg">
+      <div class="hero-grain"></div>
+      <div class="hero-blob blob1"></div>
+      <div class="hero-blob blob2"></div>
+    </div>
+
+    <div class="hero-content">
+      <p class="hero-greeting">Welcome back, {{ request.user.first_name }} 👋</p>
+      <h1 class="hero-title">
+        Find Your <span class="hero-accent">Perfect</span><br>Car Today
+      </h1>
+      <p class="hero-sub">{{ featured_cars|length }}+ verified cars across India. No middlemen. No hassle.</p>
+
+      <!-- SEARCH BOX -->
+      <div class="hero-search">
+        <form method="GET" action="{% url 'car_listing' %}">
+          <div class="search-grid">
+            <div class="search-item">
+              <label>Brand</label>
+              <input type="text" name="brand" placeholder="e.g. Honda, Maruti">
+            </div>
+            <div class="search-item">
+              <label>City</label>
+              <input type="text" name="city" placeholder="e.g. Mumbai, Delhi">
+            </div>
+            <div class="search-item">
+              <label>Budget</label>
+              <select name="max_price">
+                <option value="">Any Budget</option>
+                <option value="300000">Under ₹3 Lakh</option>
+                <option value="500000">Under ₹5 Lakh</option>
+                <option value="1000000">Under ₹10 Lakh</option>
+                <option value="2000000">Under ₹20 Lakh</option>
+              </select>
+            </div>
+            <div class="search-item">
+              <label>Fuel</label>
+              <select name="fuel">
+                <option value="">Any Fuel</option>
+                <option value="Petrol">Petrol</option>
+                <option value="Diesel">Diesel</option>
+                <option value="CNG">CNG</option>
+                <option value="Electric">Electric</option>
+              </select>
+            </div>
+          </div>
+          <button type="submit" class="btn-hero-search">🔍 Search Cars</button>
+        </form>
+      </div>
+
+      <div class="hero-badges">
+        <div class="badge"><span>✅</span> Verified Cars</div>
+        <div class="badge"><span>🔒</span> Safe Deals</div>
+        <div class="badge"><span>⚡</span> Instant Contact</div>
+        <div class="badge"><span>📍</span> Pan India</div>
+      </div>
+    </div>
+
+    <div class="hero-stats">
+      <div class="stat-item">
+        <span class="stat-num" data-count="{{ featured_cars|length }}">0</span>
+        <span class="stat-label">Cars Listed</span>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-item">
+        <span class="stat-num" data-count="{{ active_inquiries }}">0</span>
+        <span class="stat-label">My Inquiries</span>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-item">
+        <span class="stat-num" data-count="{{ active_test_drives }}">0</span>
+        <span class="stat-label">Test Drives</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FEATURED CARS ===== -->
+  <section class="section featured-section">
+    <div class="section-header">
+      <div>
+        <p class="section-tag">🔥 Hot Deals</p>
+        <h2>Featured Cars</h2>
+      </div>
+      <a href="{% url 'car_listing' %}" class="btn-see-all">View All →</a>
+    </div>
+
+    <div class="cars-grid" id="carsGrid">
+      <!-- Skeletons -->
+      {% for i in "1234" %}
+      <div class="skeleton-card">
+        <div class="skel skel-img"></div>
+        <div class="skel-body">
+          <div class="skel skel-title"></div>
+          <div class="skel skel-price"></div>
+          <div class="skel-tags">
+            <div class="skel skel-tag"></div>
+            <div class="skel skel-tag"></div>
+          </div>
+          <div class="skel skel-btn"></div>
+        </div>
+      </div>
+      {% endfor %}
+
+      <!-- Real Cars -->
+      <div id="carsReal" style="display:contents; visibility:hidden;">
+        {% for car in featured_cars %}
+        <div class="car-card" style="animation-delay:{{ forloop.counter0 }}00ms">
+          <div class="car-img-wrap">
+            {% with car.images.first as img %}
+              {% if img %}<img src="{{ img.image_url }}" alt="{{ car.brand }}" loading="lazy">
+              {% else %}<div class="car-no-img">🚗</div>{% endif %}
+            {% endwith %}
+            <div class="car-badge">{{ car.fuel_type }}</div>
+            <a href="{% url 'car_compare' %}?car1={{ car.id }}" class="car-compare-btn" title="Compare">⚡</a>
+          </div>
+          <div class="car-body">
+            <h3>{{ car.brand }} {{ car.model }}</h3>
+            <p class="car-year-city">{{ car.year }} • {{ car.city }}</p>
+            <p class="car-price">₹{{ car.price }}</p>
+            <div class="car-specs">
+              <span>⚙️ {{ car.transmission }}</span>
+              <span>🛣 {{ car.km_driven }}km</span>
+              <span>👤 {{ car.get_ownership_display }}</span>
+            </div>
+            <div class="car-actions">
+              <a href="{% url 'car_detail' car.id %}" class="btn-card-view">View Details</a>
+              <a href="{% url 'send_inquiry' car.id %}" class="btn-card-inquiry" title="Inquire">💬</a>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== MY RECENT INQUIRIES ===== -->
+  {% if recent_inquiries %}
+  <section class="section activity-section">
+    <div class="section-header">
+      <div>
+        <p class="section-tag">💬 Activity</p>
+        <h2>Recent Inquiries</h2>
+      </div>
+      <a href="{% url 'my_inquiries' %}" class="btn-see-all">View All →</a>
+    </div>
+    <div class="inquiry-list">
+      {% for inquiry in recent_inquiries %}
+      <a href="{% url 'inquiry_detail' inquiry.id %}" class="inquiry-row">
+        <div class="inq-img">
+          {% with inquiry.car.images.first as img %}
+            {% if img %}<img src="{{ img.image_url }}" alt="">
+            {% else %}<div class="inq-no-img">🚗</div>{% endif %}
+          {% endwith %}
+        </div>
+        <div class="inq-info">
+          <h4>{{ inquiry.car.brand }} {{ inquiry.car.model }} {{ inquiry.car.year }}</h4>
+          <p>Seller: {{ inquiry.car.seller.first_name }} {{ inquiry.car.seller.last_name }}</p>
+          {% with inquiry.messages.last as last_msg %}
+            {% if last_msg %}<span class="inq-last-msg">{{ last_msg.text|truncatechars:50 }}</span>{% endif %}
+          {% endwith %}
+        </div>
+        <div class="inq-meta">
+          <span class="status-badge {{ inquiry.status }}">{{ inquiry.status|capfirst }}</span>
+          <small>{{ inquiry.created_at|date:"d M" }}</small>
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}
+
+  <!-- ===== BROWSE BY BRAND ===== -->
+  <section class="brand-section-wrap">
+    <div class="section">
+      <div class="section-header">
+        <div>
+          <p class="section-tag">🚘 Popular</p>
+          <h2>Browse by Brand</h2>
+        </div>
+      </div>
+      <div class="brand-grid">
+        {% for brand in brands %}
+        <a href="{% url 'car_listing' %}?brand={{ brand }}" class="brand-card">
+          <span class="brand-initial">{{ brand|first }}</span>
+          <span class="brand-name">{{ brand }}</span>
+        </a>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== BROWSE BY BUDGET ===== -->
+  <section class="section">
+    <div class="section-header">
+      <div>
+        <p class="section-tag">💰 Budget</p>
+        <h2>Find by Budget</h2>
+      </div>
+    </div>
+    <div class="budget-grid">
+      <a href="{% url 'car_listing' %}?max_price=300000" class="budget-card">
+        <span class="budget-range">Under ₹3L</span>
+        <span class="budget-label">Entry Level</span>
+      </a>
+      <a href="{% url 'car_listing' %}?min_price=300000&max_price=500000" class="budget-card">
+        <span class="budget-range">₹3L – ₹5L</span>
+        <span class="budget-label">Popular Range</span>
+      </a>
+      <a href="{% url 'car_listing' %}?min_price=500000&max_price=1000000" class="budget-card budget-hot">
+        <span class="budget-tag">Most Popular</span>
+        <span class="budget-range">₹5L – ₹10L</span>
+        <span class="budget-label">Best Value</span>
+      </a>
+      <a href="{% url 'car_listing' %}?min_price=1000000&max_price=2000000" class="budget-card">
+        <span class="budget-range">₹10L – ₹20L</span>
+        <span class="budget-label">Premium</span>
+      </a>
+      <a href="{% url 'car_listing' %}?min_price=2000000" class="budget-card">
+        <span class="budget-range">₹20L+</span>
+        <span class="budget-label">Luxury</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- ===== WHY WHEELDEAL ===== -->
+  <section class="why-wrap">
+    <div class="section">
+      <div class="section-header centered">
+        <p class="section-tag">🏆 Why Us</p>
+        <h2>Why Choose WheelDeal?</h2>
+      </div>
+      <div class="why-grid">
+        <div class="why-card">
+          <div class="why-icon">🔍</div>
+          <h3>Verified Listings</h3>
+          <p>Every car is reviewed before going live. No fake listings.</p>
+        </div>
+        <div class="why-card">
+          <div class="why-icon">💬</div>
+          <h3>Direct Chat</h3>
+          <p>Talk directly with sellers. No middlemen.</p>
+        </div>
+        <div class="why-card">
+          <div class="why-icon">🚗</div>
+          <h3>Test Drive</h3>
+          <p>Book a test drive right from the app.</p>
+        </div>
+        <div class="why-card">
+          <div class="why-icon">⚡</div>
+          <h3>Compare Cars</h3>
+          <p>Compare up to 3 cars side by side.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== REVIEWS ===== -->
+  {% if recent_reviews %}
+  <section class="section">
+    <div class="section-header">
+      <div>
+        <p class="section-tag">⭐ Reviews</p>
+        <h2>What Buyers Say</h2>
+      </div>
+    </div>
+    <div class="reviews-grid">
+      {% for review in recent_reviews %}
+      <div class="review-card">
+        <div class="review-stars">
+          {% for i in "12345" %}
+            <span {% if forloop.counter <= review.rating %}class="star-filled"{% else %}class="star-empty"{% endif %}>★</span>
+          {% endfor %}
+        </div>
+        <p class="review-text">"{{ review.comment|truncatechars:120 }}"</p>
+        <div class="review-author">
+          <div class="review-avatar">{{ review.reviewer.first_name|first|upper }}</div>
+          <div>
+            <strong>{{ review.reviewer.first_name }} {{ review.reviewer.last_name }}</strong>
+            <p>{{ review.car.brand }} {{ review.car.model }}</p>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-brand">
+        <a href="{% url 'homepage' %}" class="nav-logo" style="margin-bottom:12px; display:inline-flex;">
+          <span class="logo-wheel">⚙</span>
+          <span class="logo-text">Wheel<span>Deal</span></span>
+        </a>
+        <p>India's smartest used car marketplace.</p>
+      </div>
+      <div class="footer-links">
+        <h4>Quick Links</h4>
+        <a href="{% url 'car_listing' %}">Browse Cars</a>
+        <a href="{% url 'car_compare' %}">Compare</a>
+        <a href="{% url 'my_inquiries' %}">My Inquiries</a>
+        <a href="{% url 'my_test_drives' %}">Test Drives</a>
+      </div>
+      <div class="footer-links">
+        <h4>My Account</h4>
+        <a href="{% url 'profile' %}">Profile</a>
+        <a href="{% url 'edit_profile' %}">Edit Profile</a>
+        <a href="{% url 'logout' %}">Logout</a>
+      </div>
+      <div class="footer-links">
+        <h4>Contact</h4>
+        <a href="#">📧 hello@wheeldeal.in</a>
+        <a href="#">📞 1800-XXX-XXXX</a>
+        <a href="#">📍 Ahmedabad, Gujarat</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 WheelDeal. Made with ❤️ in India.</p>
+    </div>
+  </footer>
+
+</div>
+
+{% endblock content %}
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+  const splash = document.getElementById('splash');
+  const main = document.getElementById('mainContent');
+
+  setTimeout(() => {
+    splash.classList.add('splash-exit');
+    setTimeout(() => {
+      splash.style.display = 'none';
+      main.classList.add('main-visible');
+
+      // Show skeletons for 800ms, then reveal cars
+      setTimeout(() => {
+        document.querySelectorAll('.skeleton-card').forEach(s => s.style.display = 'none');
+        const carsReal = document.getElementById('carsReal');
+        if (carsReal) carsReal.style.visibility = 'visible';
+
+        document.querySelectorAll('.stat-num').forEach(el => {
+          const target = parseInt(el.dataset.count) || 0;
+          let current = 0;
+          const step = Math.max(1, Math.ceil(target / 40));
+          const timer = setInterval(() => {
+            current = Math.min(current + step, target);
+            el.textContent = current + (target > 10 ? '+' : '');
+            if (current >= target) clearInterval(timer);
+          }, 30);
+        });
+      }, 800);
+
+    }, 600);
+  }, 2800);
+
+});
+</script>
+{% endblock scripts %}

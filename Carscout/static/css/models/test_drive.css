@@ -1,0 +1,447 @@
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap');
+
+:root {
+  --red: #ff4d30;
+  --red-dark: #e03a1f;
+  --black: #0d0d0d;
+  --card-bg: #ffffff;
+  --grey: #f5f5f5;
+  --grey2: #efefef;
+  --text-muted: #888;
+  --shadow: 0 4px 24px rgba(0,0,0,0.08);
+  --radius: 16px;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+   padding-top: 80px;
+  font-family: 'DM Sans', sans-serif;
+  background: #f7f7f7;
+  color: var(--black);
+}
+
+/* ===== BOOKING WRAPPER ===== */
+.td-wrapper {
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 0 48px;
+  display: grid;
+  grid-template-columns: 1.3fr 0.7fr;
+  gap: 28px;
+  align-items: start;
+}
+
+.td-left {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.td-header h1 {
+  font-family: 'Syne', sans-serif;
+  font-size: 32px;
+  font-weight: 800;
+  margin-bottom: 6px;
+}
+
+.td-header p {
+  font-size: 15px;
+  color: var(--text-muted);
+}
+
+/* ===== FORM SECTION ===== */
+.form-section {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  padding: 28px;
+  box-shadow: var(--shadow);
+}
+
+.form-section h3 {
+  font-family: 'Syne', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid var(--grey2);
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.form-group.full-width {
+  grid-column: 1 / -1;
+}
+
+.form-group label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 11px 14px;
+  border: 1.5px solid var(--grey2);
+  border-radius: 10px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  color: var(--black);
+  background: #fafafa;
+  outline: none;
+  transition: border 0.2s;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  border-color: var(--red);
+  background: white;
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 90px;
+}
+
+.btn-submit {
+  width: 100%;
+  padding: 16px;
+  background: var(--red);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-family: 'Syne', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.15s;
+  box-shadow: 0 4px 15px rgba(255,77,48,0.3);
+}
+.btn-submit:hover {
+  background: var(--red-dark);
+  transform: translateY(-2px);
+}
+
+/* ===== RIGHT PANEL ===== */
+.td-right {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  position: sticky;
+  top: 20px;
+}
+
+.car-card {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+
+.car-card img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  display: block;
+}
+
+.no-img {
+  width: 100%;
+  height: 180px;
+  background: var(--grey);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40px;
+}
+
+.car-card-info {
+  padding: 18px;
+}
+
+.car-card-info h3 {
+  font-family: 'Syne', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.car-price {
+  font-family: 'Syne', sans-serif;
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--red);
+  margin-bottom: 10px;
+}
+
+.car-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.car-tags span {
+  background: var(--grey);
+  border-radius: 20px;
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #444;
+}
+
+.info-card {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  padding: 22px;
+  box-shadow: var(--shadow);
+}
+
+.info-card.tips {
+  border-left: 4px solid var(--red);
+}
+
+.info-icon {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.info-card h3 {
+  font-family: 'Syne', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.info-card ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.info-card ul li {
+  font-size: 13px;
+  color: #555;
+}
+
+/* ===== LIST WRAPPER ===== */
+.td-list-wrapper {
+  max-width: 1000px;
+  margin: 40px auto;
+  padding: 0 48px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.td-list-header h1 {
+  font-family: 'Syne', sans-serif;
+  font-size: 32px;
+  font-weight: 800;
+  margin-bottom: 6px;
+}
+
+.td-list-header p {
+  font-size: 15px;
+  color: var(--text-muted);
+}
+
+/* ===== TD LIST ===== */
+.td-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* ===== TD ROW ===== */
+.td-row {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  padding: 20px 24px;
+  box-shadow: var(--shadow);
+  display: grid;
+  grid-template-columns: 120px 1fr auto;
+  gap: 24px;
+  align-items: center;
+  transition: transform 0.2s;
+}
+
+.td-row:hover {
+  transform: translateY(-2px);
+}
+
+.td-car-img img {
+  width: 120px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 10px;
+  display: block;
+}
+
+.td-car-img .no-img {
+  width: 120px;
+  height: 80px;
+  font-size: 28px;
+}
+
+/* ===== TD INFO ===== */
+.td-info h3 {
+  font-family: 'Syne', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.td-info p {
+  font-size: 13px;
+  color: #555;
+  margin-bottom: 4px;
+}
+
+.td-details {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.td-details span {
+  font-size: 12px;
+  background: var(--grey);
+  padding: 4px 10px;
+  border-radius: 20px;
+  color: #444;
+  font-weight: 500;
+}
+
+.td-notes {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 6px;
+  font-style: italic;
+}
+
+/* ===== TD STATUS ===== */
+.td-status {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 5px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.status-badge.pending   { background: #fff4e5; color: #e07a00; }
+.status-badge.scheduled { background: #e8f4ff; color: #1a6fc4; }
+.status-badge.completed { background: #e6f9f0; color: #1a9c5b; }
+.status-badge.cancelled { background: #ffeaea; color: #d93025; }
+
+.td-status small {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+/* ===== STATUS SELECT ===== */
+.status-select {
+  padding: 8px 12px;
+  border: 1.5px solid var(--grey2);
+  border-radius: 8px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  outline: none;
+  background: #fafafa;
+  cursor: pointer;
+  transition: border 0.2s;
+}
+.status-select:focus { border-color: var(--red); }
+
+.btn-update {
+  padding: 8px 16px;
+  background: var(--black);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-family: 'Syne', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.btn-update:hover { background: #2a2a2a; }
+
+/* ===== EMPTY STATE ===== */
+.empty-state {
+  text-align: center;
+  padding: 80px 20px;
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.empty-icon { font-size: 60px; margin-bottom: 20px; }
+
+.empty-state h3 {
+  font-family: 'Syne', sans-serif;
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.empty-state p {
+  font-size: 15px;
+  color: var(--text-muted);
+  margin-bottom: 24px;
+}
+
+.btn-browse {
+  display: inline-block;
+  padding: 13px 28px;
+  background: var(--red);
+  color: white;
+  text-decoration: none;
+  border-radius: 12px;
+  font-family: 'Syne', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  transition: background 0.2s, transform 0.15s;
+}
+.btn-browse:hover {
+  background: var(--red-dark);
+  transform: translateY(-2px);
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 1024px) {
+  .td-wrapper { grid-template-columns: 1fr; padding: 0 24px; }
+  .td-right { position: static; }
+  .td-list-wrapper { padding: 0 24px; }
+}
+
+@media (max-width: 768px) {
+  .td-wrapper { padding: 0 16px; margin: 24px auto; }
+  .td-list-wrapper { padding: 0 16px; }
+  .form-grid { grid-template-columns: 1fr; }
+  .td-row { grid-template-columns: 1fr; }
+  .td-car-img img { width: 100%; height: 160px; }
+  .td-status { align-items: flex-start; }
+}

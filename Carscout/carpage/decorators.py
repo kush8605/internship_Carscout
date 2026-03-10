@@ -14,4 +14,11 @@ def role_required(allowed_roles=[]):
         return wrapper_func                      
     return decorator    
 
+
+
+
+
+
+
+
                 

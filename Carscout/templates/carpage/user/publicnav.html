@@ -1,0 +1,27 @@
+{% load static %}
+{% comment %} <link rel="stylesheet" href="{% static 'css/homepage.css' %}"> {% endcomment %}
+
+<nav class="navbar" id="navbar">
+  <div class="nav-container">
+
+    <a href="{% url 'homepage' %}" class="nav-logo">
+      <span class="logo-wheel">⚙</span>
+      <span class="logo-text">Wheel<span>Deal</span></span>
+    </a>
+
+    <div class="nav-links" id="navLinks">
+      <a href="{% url 'car_listing' %}" class="nav-link">Browse Cars</a>
+      <a href="{% url 'car_compare' %}" class="nav-link">Compare</a>
+    </div>
+
+    <div class="nav-actions">
+      <a href="{% url 'login' %}" class="btn-nav-login">Login</a>
+      <a href="{% url 'signup' %}" class="btn-nav-signup">Sign Up Free</a>
+    </div>
+
+    <button class="nav-hamburger" id="hamburger">
+      <span></span><span></span><span></span>
+    </button>
+
+  </div>
+</nav>

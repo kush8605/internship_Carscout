@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/models/test_drive.css' %}">
+
+<div class="td-wrapper">
+
+  <!-- LEFT — Form -->
+  <div class="td-left">
+    <div class="td-header">
+      <h1>Book Test Drive</h1>
+      <p>Schedule a test drive for {{ car.brand }} {{ car.model }} {{ car.year }}</p>
+    </div>
+
+    <form method="POST" action="{% url 'book_test_drive' car.id %}">
+      {% csrf_token %}
+
+      <div class="form-section">
+        <h3>Appointment Details</h3>
+        <div class="form-grid">
+
+          <div class="form-group">
+            <label>Date</label>
+            <input type="date" name="date" required>
+          </div>
+
+          <div class="form-group">
+            <label>Time</label>
+            <input type="time" name="time" required>
+          </div>
+
+          <div class="form-group full-width">
+            <label>Meeting Location</label>
+            <input type="text" name="location" 
+                   placeholder="e.g. Seller's address or nearby landmark" required>
+          </div>
+
+          <div class="form-group full-width">
+            <label>Notes (Optional)</label>
+            <textarea name="notes" 
+                      placeholder="Any special requests or questions..."></textarea>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ERRORS -->
+      {% if messages %}
+      <div class="form-errors">
+        {% for message in messages %}
+          <p>{{ message }}</p>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      <button type="submit" class="btn-submit">🚗 Confirm Booking</button>
+
+    </form>
+  </div>
+
+  <!-- RIGHT — Car Info -->
+  <div class="td-right">
+    <div class="car-card">
+      {% with car.images.first as img %}
+        {% if img %}
+          <img src="{{ img.image_url }}" alt="{{ car.brand }}">
+        {% else %}
+          <div class="no-img">🚗</div>
+        {% endif %}
+      {% endwith %}
+
+      <div class="car-card-info">
+        <h3>{{ car.brand }} {{ car.model }} {{ car.year }}</h3>
+        <p class="car-price">₹{{ car.price }}</p>
+        <div class="car-tags">
+          <span>⛽ {{ car.fuel_type }}</span>
+          <span>⚙️ {{ car.transmission }}</span>
+          <span>📍 {{ car.city }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-card">
+      <div class="info-icon">📋</div>
+      <h3>How It Works</h3>
+      <ul>
+        <li>✅ Fill booking details</li>
+        <li>✅ Seller approves request</li>
+        <li>✅ Meet at agreed location</li>
+        <li>✅ Test drive the car</li>
+      </ul>
+    </div>
+
+    <div class="info-card tips">
+      <div class="info-icon">💡</div>
+      <h3>Tips</h3>
+      <ul>
+        <li>Check car documents</li>
+        <li>Test all features</li>
+        <li>Inspect for any damage</li>
+        <li>Check engine & brakes</li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+{% endblock content %}

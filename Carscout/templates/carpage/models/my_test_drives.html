@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/models/test_drive.css' %}">
+
+<div class="td-list-wrapper">
+
+  <div class="td-list-header">
+    <h1>My Test Drives</h1>
+    <p>Track all your scheduled test drives</p>
+  </div>
+
+  {% if test_drives %}
+  <div class="td-list">
+    {% for td in test_drives %}
+    <div class="td-row">
+
+      <div class="td-car-img">
+        {% with td.car.images.first as img %}
+          {% if img %}
+            <img src="{{ img.image_url }}" alt="">
+          {% else %}
+            <div class="no-img">🚗</div>
+          {% endif %}
+        {% endwith %}
+      </div>
+
+      <div class="td-info">
+        <h3>{{ td.car.brand }} {{ td.car.model }} {{ td.car.year }}</h3>
+        <p>Seller: <strong>{{ td.car.seller.first_name }} {{ td.car.seller.last_name }}</strong></p>
+        <div class="td-details">
+          <span>📅 {{ td.date }}</span>
+          <span>🕐 {{ td.time }}</span>
+          <span>📍 {{ td.location }}</span>
+        </div>
+        {% if td.notes %}
+          <p class="td-notes">📝 {{ td.notes }}</p>
+        {% endif %}
+      </div>
+
+      <div class="td-status">
+        <span class="status-badge {{ td.status }}">
+          {{ td.get_status_display }}
+        </span>
+        <small>Booked: {{ td.created_at|date:"d M Y" }}</small>
+      </div>
+
+    </div>
+    {% endfor %}
+  </div>
+
+  {% else %}
+  <div class="empty-state">
+    <div class="empty-icon">🚗</div>
+    <h3>No Test Drives Yet</h3>
+    <p>Browse cars and book a test drive!</p>
+    <a href="{% url 'car_listing' %}" class="btn-browse">Browse Cars →</a>
+  </div>
+  {% endif %}
+
+</div>
+{% endblock content %}

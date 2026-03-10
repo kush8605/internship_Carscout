@@ -15,6 +15,7 @@
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 body {
+  padding-top: 70px;
   font-family: 'DM Sans', sans-serif;
   background: #f7f7f7;
   color: var(--black);

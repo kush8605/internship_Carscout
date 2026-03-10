@@ -79,8 +79,8 @@
 
     <!-- Action Buttons -->
     <div class="action-buttons">
-      <a href="#" class="btn-inquiry">💬 Send Inquiry</a>
-      <a href="#" class="btn-testdrive">🚗 Book Test Drive</a>
+      <a href="{% url 'send_inquiry' car.id %}" class="btn-inquiry">💬 Send Inquiry</a>
+      <a href="{% url 'book_test_drive' car.id %}" class="btn-testdrive">🚗 Book Test Drive</a>
     </div>
 
     <!-- LIGHTBOX -->
@@ -90,28 +90,41 @@
     </div>
 
     <!-- Reviews -->
-    <div class="reviews-box">
-      <h3>Reviews ({{ car.reviews.count }})</h3>
-      {% if car.reviews.all %}
-        {% for review in car.reviews.all %}
-        <div class="review-card">
-          <div class="review-header">
-            <strong>{{ review.reviewer.first_name }}</strong>
-            <span class="stars">
-              {% for i in "12345" %}
-                {% if forloop.counter <= review.rating %}⭐{% endif %}
-              {% endfor %}
-            </span>
-          </div>
-          <p>{{ review.comment }}</p>
-          <small>{{ review.created_at|date:"d M Y" }}</small>
-        </div>
-        {% endfor %}
-      {% else %}
-        <p class="no-reviews">No reviews yet for this car.</p>
-      {% endif %}
+<div class="reviews-box">
+  <div class="reviews-top">
+    <h3>Reviews ({{ car.reviews.count }})</h3>
+    {% if request.user.role == 'Buyer' %}
+      <a href="{% url 'add_review' car.id %}" class="btn-add-review">+ Add Review</a>
+    {% endif %}
+  </div>
+
+  {% if car.reviews.all %}
+    {% for review in car.reviews.all %}
+    <div class="review-card">
+      <div class="review-header">
+        <strong>{{ review.reviewer.first_name }} {{ review.reviewer.last_name }}</strong>
+        <span class="stars">
+          {% for i in "12345" %}
+            {% if forloop.counter <= review.rating %}⭐{% endif %}
+          {% endfor %}
+        </span>
+      </div>
+      <p>{{ review.comment }}</p>
+      <div class="review-footer">
+        <small>{{ review.created_at|date:"d M Y" }}</small>
+        {% if review.reviewer == request.user %}
+          <a href="{% url 'delete_review' review.id %}"
+             class="btn-delete-review"
+             onclick="return confirm('Delete this review?')">🗑 Delete</a>
+        {% endif %}
+      </div>
     </div>
-    
+    {% endfor %}
+  {% else %}
+    <p class="no-reviews">No reviews yet. Be the first to review!</p>
+  {% endif %}
+
+</div>
 
   </div>
 </div>

@@ -1,0 +1,374 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/user/seller_home.css' %}">
+
+<!-- ===== SPLASH SCREEN ===== -->
+<div class="splash" id="splash">
+  <div class="splash-bg"></div>
+  <div class="splash-content">
+    <div class="splash-wheel">
+      <svg viewBox="0 0 120 120" class="wheel-svg">
+        <circle cx="60" cy="60" r="54" fill="none" stroke="#ff4d30" stroke-width="3" opacity="0.3"/>
+        <circle cx="60" cy="60" r="54" fill="none" stroke="#ff4d30" stroke-width="3"
+          stroke-dasharray="339" stroke-dashoffset="339" class="wheel-circle"/>
+        <line x1="60" y1="6" x2="60" y2="60" stroke="#ff4d30" stroke-width="2" opacity="0" class="spoke"/>
+        <line x1="114" y1="60" x2="60" y2="60" stroke="#ff4d30" stroke-width="2" opacity="0" class="spoke" style="animation-delay:0.1s"/>
+        <line x1="60" y1="114" x2="60" y2="60" stroke="#ff4d30" stroke-width="2" opacity="0" class="spoke" style="animation-delay:0.2s"/>
+        <line x1="6" y1="60" x2="60" y2="60" stroke="#ff4d30" stroke-width="2" opacity="0" class="spoke" style="animation-delay:0.3s"/>
+        <circle cx="60" cy="60" r="10" fill="#ff4d30" opacity="0" class="hub"/>
+        <circle cx="60" cy="60" r="5" fill="#0d0d0d" opacity="0" class="hub" style="animation-delay:0.1s"/>
+      </svg>
+    </div>
+    <div class="splash-brand">
+      <span class="splash-wheel-text">WHEEL</span>
+      <span class="splash-deal-text">DEAL</span>
+    </div>
+    <p class="splash-tagline">Seller Dashboard 🚗</p>
+    <div class="splash-loader"><div class="splash-loader-bar"></div></div>
+  </div>
+</div>
+
+<!-- ===== MAIN CONTENT ===== -->
+<div class="main-content" id="mainContent">
+
+  <!-- ===== HERO ===== -->
+  <section class="hero">
+    <div class="hero-bg">
+      <div class="hero-grain"></div>
+      <div class="hero-blob blob1"></div>
+      <div class="hero-blob blob2"></div>
+    </div>
+
+    <div class="hero-content">
+      <p class="hero-greeting">Welcome back, {{ request.user.first_name }} 👋</p>
+      <h1 class="hero-title">
+        Your <span class="hero-accent">Seller</span><br>Dashboard
+      </h1>
+      <p class="hero-sub">Manage your listings, track inquiries, and close deals faster.</p>
+
+      <div class="hero-ctas">
+        <a href="{% url 'post_car' %}" class="btn-post-car">➕ Post a New Car</a>
+        <a href="{% url 'my_listing' %}" class="btn-view-listings">View My Listings →</a>
+      </div>
+
+      <div class="hero-badges">
+        <div class="badge"><span>✅</span> Verified Seller</div>
+        <div class="badge"><span>💬</span> Direct Buyer Contact</div>
+        <div class="badge"><span>⚡</span> Instant Notifications</div>
+        <div class="badge"><span>🆓</span> Free Listing</div>
+      </div>
+    </div>
+
+    <div class="hero-stats">
+      <div class="stat-item">
+        <span class="stat-num" data-count="{{ total_listings }}">0</span>
+        <span class="stat-label">My Listings</span>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-item">
+        <span class="stat-num" data-count="{{ total_inquiries }}">0</span>
+        <span class="stat-label">Inquiries</span>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-item">
+        <span class="stat-num" data-count="{{ total_test_drives }}">0</span>
+        <span class="stat-label">Test Drives</span>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-item">
+        <span class="stat-num" data-count="{{ total_sold }}">0</span>
+        <span class="stat-label">Cars Sold</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== QUICK ACTIONS ===== -->
+  <section class="section quick-section">
+    <div class="section-header">
+      <div>
+        <p class="section-tag">⚡ Quick Actions</p>
+        <h2>What do you want to do?</h2>
+      </div>
+    </div>
+    <div class="quick-grid">
+      <a href="{% url 'post_car' %}" class="quick-card quick-post">
+        <div class="quick-icon">➕</div>
+        <h3>Post a Car</h3>
+        <p>List your car in under 5 minutes</p>
+        <span class="quick-arrow">→</span>
+      </a>
+      <a href="{% url 'my_listing' %}" class="quick-card">
+        <div class="quick-icon">🚗</div>
+        <h3>My Listings</h3>
+        <p>View and manage all your cars</p>
+        <span class="quick-arrow">→</span>
+      </a>
+      <a href="{% url 'seller_inquiries' %}" class="quick-card">
+        <div class="quick-icon">💬</div>
+        <h3>Inquiries</h3>
+        <p>Reply to buyer messages</p>
+        <span class="quick-arrow">→</span>
+        {% if total_inquiries > 0 %}
+          <span class="quick-badge">{{ total_inquiries }}</span>
+        {% endif %}
+      </a>
+      <a href="{% url 'seller_test_drives' %}" class="quick-card">
+        <div class="quick-icon">📅</div>
+        <h3>Test Drives</h3>
+        <p>Manage scheduled test drives</p>
+        <span class="quick-arrow">→</span>
+        {% if total_test_drives > 0 %}
+          <span class="quick-badge">{{ total_test_drives }}</span>
+        {% endif %}
+      </a>
+    </div>
+  </section>
+
+  <!-- ===== MY LISTINGS ===== -->
+  <section class="section listings-section">
+    <div class="section-header">
+      <div>
+        <p class="section-tag">🚘 My Cars</p>
+        <h2>Recent Listings</h2>
+      </div>
+      <a href="{% url 'my_listing' %}" class="btn-see-all">View All →</a>
+    </div>
+
+    <div class="cars-grid" id="carsGrid">
+      <!-- Skeletons -->
+      {% for i in "1234" %}
+      <div class="skeleton-card">
+        <div class="skel skel-img"></div>
+        <div class="skel-body">
+          <div class="skel skel-title"></div>
+          <div class="skel skel-price"></div>
+          <div class="skel-tags">
+            <div class="skel skel-tag"></div>
+            <div class="skel skel-tag"></div>
+          </div>
+          <div class="skel skel-btn"></div>
+        </div>
+      </div>
+      {% endfor %}
+
+      <!-- Real Cars -->
+      <div id="carsReal" style="display:contents; visibility:hidden;">
+        {% for car in my_listings %}
+        <div class="car-card" style="animation-delay:{{ forloop.counter0 }}00ms">
+          <div class="car-img-wrap">
+            {% with car.images.first as img %}
+              {% if img %}<img src="{{ img.image_url }}" alt="{{ car.brand }}" loading="lazy">
+              {% else %}<div class="car-no-img">🚗</div>{% endif %}
+            {% endwith %}
+            <div class="car-badge">{{ car.fuel_type }}</div>
+            <div class="car-status-badge {{ car.status }}">{{ car.status|capfirst }}</div>
+          </div>
+          <div class="car-body">
+            <h3>{{ car.brand }} {{ car.model }}</h3>
+            <p class="car-year-city">{{ car.year }} • {{ car.city }}</p>
+            <p class="car-price">₹{{ car.price }}</p>
+            <div class="car-specs">
+              <span>⚙️ {{ car.transmission }}</span>
+              <span>🛣 {{ car.km_driven }}km</span>
+            </div>
+            <div class="car-actions">
+              <a href="{% url 'car_detail' car.id %}" class="btn-card-view">View</a>
+              <a href="{% url 'edit_car' car.id %}" class="btn-card-edit">✏️ Edit</a>
+            </div>
+          </div>
+        </div>
+        {% empty %}
+        <div id="no-listings" style="display:contents;">
+          <div class="empty-state">
+            <div class="empty-icon">🚗</div>
+            <h3>No listings yet</h3>
+            <p>Post your first car and start selling today!</p>
+            <a href="{% url 'post_car' %}" class="btn-post-car">➕ Post a Car</a>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== RECENT INQUIRIES ===== -->
+  {% if recent_inquiries %}
+  <section class="section activity-section">
+    <div class="section-header">
+      <div>
+        <p class="section-tag">💬 Messages</p>
+        <h2>Recent Inquiries</h2>
+      </div>
+      <a href="{% url 'seller_inquiries' %}" class="btn-see-all">View All →</a>
+    </div>
+    <div class="inquiry-list">
+      {% for inquiry in recent_inquiries %}
+      <a href="{% url 'inquiry_detail' inquiry.id %}" class="inquiry-row">
+        <div class="inq-img">
+          {% with inquiry.car.images.first as img %}
+            {% if img %}<img src="{{ img.image_url }}" alt="">
+            {% else %}<div class="inq-no-img">🚗</div>{% endif %}
+          {% endwith %}
+        </div>
+        <div class="inq-info">
+          <h4>{{ inquiry.car.brand }} {{ inquiry.car.model }} {{ inquiry.car.year }}</h4>
+          <p>Buyer: {{ inquiry.buyer.first_name }} {{ inquiry.buyer.last_name }}</p>
+          {% with inquiry.messages.last as last_msg %}
+            {% if last_msg %}<span class="inq-last-msg">{{ last_msg.text|truncatechars:50 }}</span>{% endif %}
+          {% endwith %}
+        </div>
+        <div class="inq-meta">
+          <span class="status-badge {{ inquiry.status }}">{{ inquiry.status|capfirst }}</span>
+          <small>{{ inquiry.created_at|date:"d M" }}</small>
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}
+
+  <!-- ===== RECENT TEST DRIVES ===== -->
+  {% if recent_test_drives %}
+  <section class="section testdrive-section">
+    <div class="section-header">
+      <div>
+        <p class="section-tag">📅 Upcoming</p>
+        <h2>Test Drive Requests</h2>
+      </div>
+      <a href="{% url 'seller_test_drives' %}" class="btn-see-all">View All →</a>
+    </div>
+    <div class="testdrive-list">
+      {% for td in recent_test_drives %}
+      <div class="testdrive-row">
+        <div class="td-icon">🚗</div>
+        <div class="td-info">
+          <h4>{{ td.car.brand }} {{ td.car.model }} {{ td.car.year }}</h4>
+          <p>{{ td.buyer.first_name }} {{ td.buyer.last_name }} • {{ td.date }} at {{ td.time }}</p>
+          <p class="td-location">📍 {{ td.location }}</p>
+        </div>
+        <div class="td-meta">
+          <span class="status-badge {{ td.status }}">{{ td.status|capfirst }}</span>
+          <form method="POST" action="{% url 'update_test_drive' td.id %}">
+            {% csrf_token %}
+            <select name="status" onchange="this.form.submit()" class="td-status-select">
+              <option value="pending" {% if td.status == 'pending' %}selected{% endif %}>Pending</option>
+              <option value="scheduled" {% if td.status == 'scheduled' %}selected{% endif %}>Scheduled</option>
+              <option value="completed" {% if td.status == 'completed' %}selected{% endif %}>Completed</option>
+              <option value="cancelled" {% if td.status == 'cancelled' %}selected{% endif %}>Cancelled</option>
+            </select>
+          </form>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}
+
+  <!-- ===== TIPS SECTION ===== -->
+  <section class="tips-wrap">
+    <div class="section">
+      <div class="section-header centered">
+        <p class="section-tag">💡 Tips</p>
+        <h2>Sell Faster with These Tips</h2>
+      </div>
+      <div class="tips-grid">
+        <div class="tip-card">
+          <div class="tip-icon">📸</div>
+          <h3>Great Photos</h3>
+          <p>Listings with 5+ clear photos get 3x more inquiries. Shoot in good lighting.</p>
+        </div>
+        <div class="tip-card">
+          <div class="tip-icon">💰</div>
+          <h3>Right Price</h3>
+          <p>Check similar cars on WheelDeal before pricing. Competitive prices sell faster.</p>
+        </div>
+        <div class="tip-card">
+          <div class="tip-icon">📝</div>
+          <h3>Full Description</h3>
+          <p>Mention service history, accidents, modifications. Transparency builds trust.</p>
+        </div>
+        <div class="tip-card">
+          <div class="tip-icon">⚡</div>
+          <h3>Reply Fast</h3>
+          <p>Buyers contact multiple sellers. First to reply usually wins the deal.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-brand">
+        <a href="{% url 'homepage' %}" class="nav-logo" style="margin-bottom:12px; display:inline-flex;">
+          <span class="logo-wheel">⚙</span>
+          <span class="logo-text">Wheel<span>Deal</span></span>
+        </a>
+        <p>India's smartest used car marketplace.</p>
+      </div>
+      <div class="footer-links">
+        <h4>Seller Tools</h4>
+        <a href="{% url 'post_car' %}">Post a Car</a>
+        <a href="{% url 'my_listing' %}">My Listings</a>
+        <a href="{% url 'seller_inquiries' %}">Inquiries</a>
+        <a href="{% url 'seller_test_drives' %}">Test Drives</a>
+      </div>
+      <div class="footer-links">
+        <h4>My Account</h4>
+        <a href="{% url 'profile' %}">Profile</a>
+        <a href="{% url 'edit_profile' %}">Edit Profile</a>
+        <a href="{% url 'logout' %}">Logout</a>
+      </div>
+      <div class="footer-links">
+        <h4>Contact</h4>
+        <a href="#">📧 hello@wheeldeal.in</a>
+        <a href="#">📞 1800-XXX-XXXX</a>
+        <a href="#">📍 Ahmedabad, Gujarat</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 WheelDeal. Made with ❤️ in India.</p>
+    </div>
+  </footer>
+
+</div>
+{% endblock content %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+  const splash = document.getElementById('splash');
+  const main = document.getElementById('mainContent');
+
+  setTimeout(() => {
+    splash.classList.add('splash-exit');
+    setTimeout(() => {
+      splash.style.display = 'none';
+      main.classList.add('main-visible');
+
+      setTimeout(() => {
+        document.querySelectorAll('.skeleton-card').forEach(s => s.style.display = 'none');
+        const carsReal = document.getElementById('carsReal');
+        if (carsReal) carsReal.style.visibility = 'visible';
+
+        document.querySelectorAll('.stat-num').forEach(el => {
+          const target = parseInt(el.dataset.count) || 0;
+          let current = 0;
+          const step = Math.max(1, Math.ceil(target / 40));
+          const timer = setInterval(() => {
+            current = Math.min(current + step, target);
+            el.textContent = current + (target > 10 ? '+' : '');
+            if (current >= target) clearInterval(timer);
+          }, 30);
+        });
+      }, 1500);
+
+    }, 600);
+  }, 2800);
+
+});
+</script>
+{% endblock scripts %}

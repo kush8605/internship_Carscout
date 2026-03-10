@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/models/test_drive.css' %}">
+
+<div class="td-list-wrapper">
+
+  <div class="td-list-header">
+    <h1>Test Drive Requests</h1>
+    <p>Manage all test drive bookings on your cars</p>
+  </div>
+
+  {% if test_drives %}
+  <div class="td-list">
+    {% for td in test_drives %}
+    <div class="td-row">
+
+      <div class="td-car-img">
+        {% with td.car.images.first as img %}
+          {% if img %}
+            <img src="{{ img.image_url }}" alt="">
+          {% else %}
+            <div class="no-img">🚗</div>
+          {% endif %}
+        {% endwith %}
+      </div>
+
+      <div class="td-info">
+        <h3>{{ td.car.brand }} {{ td.car.model }} {{ td.car.year }}</h3>
+        <p>Buyer: <strong>{{ td.buyer.first_name }} {{ td.buyer.last_name }}</strong></p>
+        <p>{{ td.buyer.email }}</p>
+        <div class="td-details">
+          <span>📅 {{ td.date }}</span>
+          <span>🕐 {{ td.time }}</span>
+          <span>📍 {{ td.location }}</span>
+        </div>
+        {% if td.notes %}
+          <p class="td-notes">📝 {{ td.notes }}</p>
+        {% endif %}
+      </div>
+
+      <div class="td-status">
+        <span class="status-badge {{ td.status }}">
+          {{ td.get_status_display }}
+        </span>
+
+        <!-- Seller Updates Status -->
+        <form method="POST" action="{% url 'update_test_drive' td.id %}">
+          {% csrf_token %}
+          <select name="status" class="status-select">
+            <option value="pending" {% if td.status == 'pending' %}selected{% endif %}>Pending</option>
+            <option value="scheduled" {% if td.status == 'scheduled' %}selected{% endif %}>Scheduled</option>
+            <option value="completed" {% if td.status == 'completed' %}selected{% endif %}>Completed</option>
+            <option value="cancelled" {% if td.status == 'cancelled' %}selected{% endif %}>Cancelled</option>
+          </select>
+          <button type="submit" class="btn-update">Update</button>
+        </form>
+
+      </div>
+
+    </div>
+    {% endfor %}
+  </div>
+
+  {% else %}
+  <div class="empty-state">
+    <div class="empty-icon">📅</div>
+    <h3>No Test Drive Requests Yet</h3>
+    <p>Buyers will book test drives on your cars here.</p>
+    <a href="{% url 'my_listings' %}" class="btn-browse">View My Listings →</a>
+  </div>
+  {% endif %}
+
+</div>
+{% endblock content %}

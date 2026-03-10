@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/models/inquiries_list.css' %}">
+
+<div class="inquiries-wrapper">
+
+  <div class="inquiries-header">
+    <h1>Inquiries on My Cars</h1>
+    <p>Manage all buyer inquiries</p>
+  </div>
+  <!-- FILTER BAR -->
+<div class="filter-bar">
+  <form method="GET">
+
+    <div class="filter-search">
+      <input type="text" name="search" 
+             placeholder="Search by car or buyer name..." 
+             value="{{ request.GET.search }}">
+    </div>
+
+    <div class="filter-status">
+      <select name="status">
+        <option value="">All Status</option>
+        <option value="open" {% if request.GET.status == 'open' %}selected{% endif %}>Open</option>
+        <option value="negotiating" {% if request.GET.status == 'negotiating' %}selected{% endif %}>Negotiating</option>
+        <option value="closed" {% if request.GET.status == 'closed' %}selected{% endif %}>Closed</option>
+      </select>
+    </div>
+
+    <button type="submit" class="btn-filter">Search</button>
+    <a href="." class="btn-clear">Clear</a>
+
+  </form>
+</div>
+
+<!-- RESULTS COUNT -->
+<p class="results-count">{{ inquiries.count }} inquiries found</p>
+
+  {% if inquiries %}
+  <div class="inquiry-list">
+    {% for inquiry in inquiries %}
+    <a href="{% url 'inquiry_detail' inquiry.id %}" class="inquiry-row">
+
+      <div class="inquiry-car-img">
+        {% with inquiry.car.images.first as img %}
+          {% if img %}
+            <img src="{{ img.image_url }}" alt="">
+          {% else %}
+            <div class="no-img">🚗</div>
+          {% endif %}
+        {% endwith %}
+      </div>
+
+      <div class="inquiry-info">
+        <h3>{{ inquiry.car.brand }} {{ inquiry.car.model }} {{ inquiry.car.year }}</h3>
+        <p>Buyer: <strong>{{ inquiry.buyer.first_name }} {{ inquiry.buyer.last_name }}</strong></p>
+        <p>{{ inquiry.buyer.email }}</p>
+        <small>Started: {{ inquiry.created_at|date:"d M Y" }}</small>
+      </div>
+
+      <div class="inquiry-meta">
+        <span class="status-badge {{ inquiry.status }}">
+          {{ inquiry.get_status_display }}
+        </span>
+        <span class="msg-count">💬 {{ inquiry.messages.count }} messages</span>
+        {% with inquiry.messages.last as last_msg %}
+          {% if last_msg %}
+            <span class="last-msg">{{ last_msg.text|truncatechars:40 }}</span>
+          {% endif %}
+        {% endwith %}
+      </div>
+
+    </a>
+    {% endfor %}
+  </div>
+
+  {% else %}
+  <div class="empty-state">
+    <div class="empty-icon">💬</div>
+    <h3>No Inquiries Yet</h3>
+    <p>Buyers will contact you here when interested in your cars.</p>
+    <a href="{% url 'my_listings' %}" class="btn-browse">View My Listings →</a>
+  </div>
+  {% endif %}
+
+</div>
+{% endblock content %}

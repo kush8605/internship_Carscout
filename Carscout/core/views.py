@@ -47,9 +47,9 @@ def userLoginView(request):
                 if user.role == "Admin":
                     return redirect("adminhome")
                 elif user.role == "Seller":
-                    return redirect("userhome")
+                    return redirect("sellerhome")
                 elif user.role == "Buyer":
-                    return redirect("userhome")
+                    return redirect("buyerhome")
             else:
                 login_form.add_error(None, "Invalid email or password")
 
@@ -60,7 +60,7 @@ def userLoginView(request):
 
 def logoutview(request):
     logout(request)
-    return redirect("login")
+    return redirect("homepage")
 
 def send_welcome_email(user):
     subject = "Welcome to WheelDeal"
@@ -84,3 +84,7 @@ def send_welcome_email(user):
     email_message.attach_file(image_path)
 
     email_message.send()
+
+
+
+    

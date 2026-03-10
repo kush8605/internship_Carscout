@@ -1,0 +1,186 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/models/inquiry_detail.css' %}">
+
+<div class="chat-wrapper">
+
+  <!-- LEFT — Chat Box -->
+  <div class="chat-left">
+
+    <!-- Chat Header -->
+    <div class="chat-header">
+      <div class="chat-car-info">
+        {% with car.images.first as img %}
+          {% if img %}
+            <img src="{{ img.image_url }}" alt="{{ car.brand }}">
+          {% else %}
+            <div class="no-img">🚗</div>
+          {% endif %}
+        {% endwith %}
+        <div>
+          <h3>{{ car.brand }} {{ car.model }} {{ car.year }}</h3>
+          <p>₹{{ car.price }}</p>
+        </div>
+      </div>
+
+      <!-- Status Badge -->
+      <span class="status-badge {{ inquiry.status }}">
+        {{ inquiry.get_status_display }}
+      </span>
+    </div>
+
+    <!-- Messages -->
+    <div class="chat-messages" id="chatMessages">
+      {% if messages_list %}
+        {% for message in messages_list %}
+        <div class="message-row {% if message.sender == request.user %}sent{% else %}received{% endif %}">
+          <div class="message-bubble">
+            <p>{{ message.text }}</p>
+            <small>
+              {{ message.sent_at|date:"d M" }} {{ message.sent_at|time:"H:i" }}
+              {% if message.sender == request.user %}
+                {% if message.is_read %}✓✓{% else %}✓{% endif %}
+              {% endif %}
+            </small>
+          </div>
+        </div>
+        {% endfor %}
+      {% else %}
+        <div class="no-messages">
+          <p>No messages yet. Start the conversation! 👋</p>
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- Message Input -->
+    <div class="chat-input">
+      <form method="POST" action="{% url 'inquiry_detail' inquiry.id %}">
+        {% csrf_token %}
+        <input type="text" name="text" placeholder="Type your message..." autocomplete="off" required>
+        <button type="submit">Send ➤</button>
+      </form>
+    </div>
+
+  </div>
+
+  <!-- RIGHT — Inquiry Info -->
+  <div class="chat-right">
+
+    <!-- Car Details -->
+    <div class="info-card">
+      <h3>Car Details</h3>
+      <div class="info-list">
+        <div class="info-item">
+          <span class="info-label">Brand</span>
+          <span class="info-value">{{ car.brand }}</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Model</span>
+          <span class="info-value">{{ car.model }}</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Year</span>
+          <span class="info-value">{{ car.year }}</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Price</span>
+          <span class="info-value">₹{{ car.price }}</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Fuel</span>
+          <span class="info-value">{{ car.fuel_type }}</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">City</span>
+          <span class="info-value">{{ car.city }}</span>
+        </div>
+      </div>
+      <a href="{% url 'car_detail' car.id %}" class="btn-view-car">View Full Details →</a>
+    </div>
+
+    <!-- Inquiry Info -->
+    <div class="info-card">
+      <h3>Inquiry Info</h3>
+      <div class="info-list">
+        <div class="info-item">
+          <span class="info-label">Buyer</span>
+          <span class="info-value">{{ inquiry.buyer.first_name }} {{ inquiry.buyer.last_name }}</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Seller</span>
+          <span class="info-value">{{ car.seller.first_name }} {{ car.seller.last_name }}</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Started</span>
+          <span class="info-value">{{ inquiry.created_at|date:"d M Y" }}</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Messages</span>
+          <span class="info-value">{{ messages_list.count }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Update Status — only seller can change -->
+    {% if request.user == car.seller %}
+    <div class="info-card">
+      <h3>Update Status</h3>
+      <form method="POST" action="{% url 'update_inquiry_status' inquiry.id %}">
+        {% csrf_token %}
+        <select name="status" class="status-select">
+          <option value="open" {% if inquiry.status == 'open' %}selected{% endif %}>Open</option>
+          <option value="negotiating" {% if inquiry.status == 'negotiating' %}selected{% endif %}>Negotiating</option>
+          <option value="closed" {% if inquiry.status == 'closed' %}selected{% endif %}>Closed/Sold</option>
+        </select>
+        <button type="submit" class="btn-update-status">Update Status</button>
+      </form>
+    </div>
+    {% endif %}
+
+  </div>
+</div>
+
+{% endblock content %}
+
+{% block scripts %}
+<script>
+  
+  const chatBox = document.getElementById('chatMessages');
+  
+  // Scroll to bottom on load
+  chatBox.scrollTop = chatBox.scrollHeight;
+
+  // Auto fetch new messages every 4 seconds
+  setInterval(function() {
+    fetch(window.location.href)
+      .then(response => response.text())
+      .then(html => {
+        // Parse the new page
+        const parser = new DOMParser();
+        const newDoc = parser.parseFromString(html, 'text/html');
+        
+        // Get new messages
+        const newMessages = newDoc.getElementById('chatMessages').innerHTML;
+        const currentMessages = chatBox.innerHTML;
+        
+        // Only update if there are new messages
+        if (newMessages !== currentMessages) {
+          chatBox.innerHTML = newMessages;
+          // Scroll to bottom
+          chatBox.scrollTop = chatBox.scrollHeight;
+        }
+      });
+  }, 4000);
+
+  // Send message with Enter key
+  document.querySelector('.chat-input input').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      this.closest('form').submit();
+    }
+  });
+
+</script>
+{% endblock scripts %}

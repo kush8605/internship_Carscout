@@ -1,0 +1,230 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/models/car_compare.css' %}">
+
+<div class="compare-wrapper">
+
+  <!-- HEADER -->
+  <div class="compare-header">
+    <div class="compare-header-text">
+      <span class="compare-tag">⚡ Compare</span>
+      <h1>Compare Cars</h1>
+      <p>Select up to 3 cars and compare them side by side</p>
+    </div>
+  </div>
+
+  <!-- SELECT FORM -->
+  <div class="select-section">
+    <form method="POST" action="{% url 'car_compare' %}">
+      {% csrf_token %}
+
+      <div class="select-grid">
+
+        <div class="select-group">
+          <label>Car 1 <span class="required">*</span></label>
+          <select name="car1" required>
+            <option value="">Select Car 1</option>
+            {% for car in cars %}
+              <option value="{{ car.id }}"
+                {% if compare_data.car1.id == car.id %}selected
+                {% elif preselect_car1 == car.id|stringformat:"s" %}selected
+                {% endif %}>
+                {{ car.brand }} {{ car.model }} {{ car.year }} — ₹{{ car.price }}
+              </option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="select-group">
+          <label>Car 2 <span class="required">*</span></label>
+          <select name="car2" required>
+            <option value="">Select Car 2</option>
+            {% for car in cars %}
+              <option value="{{ car.id }}"
+                {% if compare_data.car2.id == car.id %}selected{% endif %}>
+                {{ car.brand }} {{ car.model }} {{ car.year }} — ₹{{ car.price }}
+              </option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="select-group">
+          <label>Car 3 <span class="optional">(Optional)</span></label>
+          <select name="car3">
+            <option value="">Select Car 3</option>
+            {% for car in cars %}
+              <option value="{{ car.id }}"
+                {% if compare_data.car3.id == car.id %}selected{% endif %}>
+                {{ car.brand }} {{ car.model }} {{ car.year }} — ₹{{ car.price }}
+              </option>
+            {% endfor %}
+          </select>
+        </div>
+
+      </div>
+
+      <div class="select-footer">
+        <button type="submit" class="btn-compare">⚡ Compare Now</button>
+        <a href="{% url 'car_compare' %}" class="btn-reset">↺ Reset</a>
+      </div>
+
+    </form>
+  </div>
+
+  <!-- COMPARE TABLE -->
+  {% if compare_data %}
+  <div class="compare-table-wrapper">
+    <div class="compare-table">
+
+      <!-- Labels Column -->
+      <div class="compare-col labels-col">
+        <div class="car-img-cell labels-img-cell">
+          <span>SPECS</span>
+        </div>
+        <div class="compare-cell label">🚗 Car</div>
+        <div class="compare-cell label">💰 Price</div>
+        <div class="compare-cell label">📅 Year</div>
+        <div class="compare-cell label">⛽ Fuel Type</div>
+        <div class="compare-cell label">⚙️ Transmission</div>
+        <div class="compare-cell label">🛣 KM Driven</div>
+        <div class="compare-cell label">🎨 Color</div>
+        <div class="compare-cell label">🔧 Engine</div>
+        <div class="compare-cell label">📊 Mileage</div>
+        <div class="compare-cell label">💺 Seating</div>
+        <div class="compare-cell label">🔑 Ownership</div>
+        <div class="compare-cell label">📍 City</div>
+        <div class="compare-cell label">✅ Status</div>
+        <div class="compare-cell label">🔗 Action</div>
+      </div>
+
+      <!-- Car 1 Column -->
+      {% if compare_data.car1 %}
+      <div class="compare-col">
+        <div class="car-img-cell">
+          {% with compare_data.car1.images.first as img %}
+            {% if img %}
+              <img src="{{ img.image_url }}" alt="{{ compare_data.car1.brand }}">
+            {% else %}
+              <div class="no-img">🚗</div>
+            {% endif %}
+          {% endwith %}
+          <div class="car-img-overlay">
+            <span>{{ compare_data.car1.brand }}</span>
+          </div>
+        </div>
+        <div class="compare-cell"><strong>{{ compare_data.car1.brand }} {{ compare_data.car1.model }}</strong></div>
+        <div class="compare-cell price">₹{{ compare_data.car1.price }}</div>
+        <div class="compare-cell">{{ compare_data.car1.year }}</div>
+        <div class="compare-cell"><span class="tag">{{ compare_data.car1.fuel_type }}</span></div>
+        <div class="compare-cell"><span class="tag">{{ compare_data.car1.transmission }}</span></div>
+        <div class="compare-cell">{{ compare_data.car1.km_driven }} km</div>
+        <div class="compare-cell">
+          <span class="color-dot" style="background:{{ compare_data.car1.color|lower }};"></span>
+          {{ compare_data.car1.color }}
+        </div>
+        <div class="compare-cell">{{ compare_data.car1.engine_cc }} cc</div>
+        <div class="compare-cell">{{ compare_data.car1.mileage }} km/l</div>
+        <div class="compare-cell">{{ compare_data.car1.seating_capacity }} Seats</div>
+        <div class="compare-cell">{{ compare_data.car1.get_ownership_display }}</div>
+        <div class="compare-cell">{{ compare_data.car1.city }}</div>
+        <div class="compare-cell">
+          <span class="status-badge {{ compare_data.car1.status }}">
+            {{ compare_data.car1.status|capfirst }}
+          </span>
+        </div>
+        <div class="compare-cell">
+          <a href="{% url 'car_detail' compare_data.car1.id %}" class="btn-view">View →</a>
+        </div>
+      </div>
+      {% endif %}
+
+      <!-- Car 2 Column -->
+      {% if compare_data.car2 %}
+      <div class="compare-col">
+        <div class="car-img-cell">
+          {% with compare_data.car2.images.first as img %}
+            {% if img %}
+              <img src="{{ img.image_url }}" alt="{{ compare_data.car2.brand }}">
+            {% else %}
+              <div class="no-img">🚗</div>
+            {% endif %}
+          {% endwith %}
+          <div class="car-img-overlay">
+            <span>{{ compare_data.car2.brand }}</span>
+          </div>
+        </div>
+        <div class="compare-cell"><strong>{{ compare_data.car2.brand }} {{ compare_data.car2.model }}</strong></div>
+        <div class="compare-cell price">₹{{ compare_data.car2.price }}</div>
+        <div class="compare-cell">{{ compare_data.car2.year }}</div>
+        <div class="compare-cell"><span class="tag">{{ compare_data.car2.fuel_type }}</span></div>
+        <div class="compare-cell"><span class="tag">{{ compare_data.car2.transmission }}</span></div>
+        <div class="compare-cell">{{ compare_data.car2.km_driven }} km</div>
+        <div class="compare-cell">
+          <span class="color-dot" style="background:{{ compare_data.car2.color|lower }};"></span>
+          {{ compare_data.car2.color }}
+        </div>
+        <div class="compare-cell">{{ compare_data.car2.engine_cc }} cc</div>
+        <div class="compare-cell">{{ compare_data.car2.mileage }} km/l</div>
+        <div class="compare-cell">{{ compare_data.car2.seating_capacity }} Seats</div>
+        <div class="compare-cell">{{ compare_data.car2.get_ownership_display }}</div>
+        <div class="compare-cell">{{ compare_data.car2.city }}</div>
+        <div class="compare-cell">
+          <span class="status-badge {{ compare_data.car2.status }}">
+            {{ compare_data.car2.status|capfirst }}
+          </span>
+        </div>
+        <div class="compare-cell">
+          <a href="{% url 'car_detail' compare_data.car2.id %}" class="btn-view">View →</a>
+        </div>
+      </div>
+      {% endif %}
+
+      <!-- Car 3 Column -->
+      {% if compare_data.car3 %}
+      <div class="compare-col">
+        <div class="car-img-cell">
+          {% with compare_data.car3.images.first as img %}
+            {% if img %}
+              <img src="{{ img.image_url }}" alt="{{ compare_data.car3.brand }}">
+            {% else %}
+              <div class="no-img">🚗</div>
+            {% endif %}
+          {% endwith %}
+          <div class="car-img-overlay">
+            <span>{{ compare_data.car3.brand }}</span>
+          </div>
+        </div>
+        <div class="compare-cell"><strong>{{ compare_data.car3.brand }} {{ compare_data.car3.model }}</strong></div>
+        <div class="compare-cell price">₹{{ compare_data.car3.price }}</div>
+        <div class="compare-cell">{{ compare_data.car3.year }}</div>
+        <div class="compare-cell"><span class="tag">{{ compare_data.car3.fuel_type }}</span></div>
+        <div class="compare-cell"><span class="tag">{{ compare_data.car3.transmission }}</span></div>
+        <div class="compare-cell">{{ compare_data.car3.km_driven }} km</div>
+        <div class="compare-cell">
+          <span class="color-dot" style="background:{{ compare_data.car3.color|lower }};"></span>
+          {{ compare_data.car3.color }}
+        </div>
+        <div class="compare-cell">{{ compare_data.car3.engine_cc }} cc</div>
+        <div class="compare-cell">{{ compare_data.car3.mileage }} km/l</div>
+        <div class="compare-cell">{{ compare_data.car3.seating_capacity }} Seats</div>
+        <div class="compare-cell">{{ compare_data.car3.get_ownership_display }}</div>
+        <div class="compare-cell">{{ compare_data.car3.city }}</div>
+        <div class="compare-cell">
+          <span class="status-badge {{ compare_data.car3.status }}">
+            {{ compare_data.car3.status|capfirst }}
+          </span>
+        </div>
+        <div class="compare-cell">
+          <a href="{% url 'car_detail' compare_data.car3.id %}" class="btn-view">View →</a>
+        </div>
+      </div>
+      {% endif %}
+
+    </div>
+  </div>
+  {% endif %}
+
+</div>
+{% endblock content %}

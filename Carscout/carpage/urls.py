@@ -2,10 +2,12 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('userhome/',views.userhome,name='userhome'),
+    path('buyerhome/',views.buyerhome,name='buyerhome'),
+    path('buyernav/',views.buyernav,name='buyernav'),
     path('adminhome/',views.adminhome,name='adminhome'),
     path('adminnav/',views.adminnav,name='adminnav'),
-    path('usernav/',views.usernav,name='usernav'),
+    path('sellerhome/',views.sellerhome,name='sellerhome'),
+    path('selllernav/',views.sellernav,name='sellernav'),
     path('',views.homepage,name='homepage'),
     path('cars/',views.car_listing,name='car_listing'),
     path('cars/<int:car_id>/', views.car_detail, name='car_detail'),
@@ -16,6 +18,16 @@ urlpatterns = [
     path('cars/image/<int:image_id>/delete/', views.delete_car_image, name='delete_car_image'),
     path('profile/', views.profile, name='profile'),
     path('profile/edit/', views.edit_profile, name='edit_profile'),
-
-
+    path('inquiry/send/<int:car_id>/', views.send_inquiry, name='send_inquiry'),
+    path('inquiry/<int:inquiry_id>/', views.inquiry_detail, name='inquiry_detail'),
+    path('inquiry/<int:inquiry_id>/status/', views.update_inquiry_status, name='update_inquiry_status'),
+    path('my_inquiries/', views.my_inquiries, name='my_inquiries'),
+    path('seller_inquiries/', views.seller_inquiries, name='seller_inquiries'),
+    path('cars/<int:car_id>/test_drive/', views.book_test_drive, name='book_test_drive'),
+    path('my_test_drives/', views.my_test_drives, name='my_test_drives'),
+    path('seller_test_drives/', views.seller_test_drives, name='seller_test_drives'),
+    path('test_drive/<int:td_id>/update/', views.update_test_drive, name='update_test_drive'),
+    path('cars/<int:car_id>/review/', views.add_review, name='add_review'),
+    path('review/<int:review_id>/delete/', views.delete_review, name='delete_review'),
+    path('compare/', views.car_compare, name='car_compare'),
 ]

@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/models/add_review.css' %}">
+
+<div class="review-wrapper">
+
+  <div class="review-left">
+    <div class="review-header">
+      <h1>Write a Review</h1>
+      <p>Share your experience about {{ car.brand }} {{ car.model }}</p>
+    </div>
+
+    <form method="POST" action="{% url 'add_review' car.id %}">
+      {% csrf_token %}
+
+      <div class="form-section">
+        <h3>Your Rating</h3>
+
+        <!-- Star Rating -->
+        <div class="star-rating">
+          <input type="radio" name="rating" value="5" id="star5">
+          <label for="star5">⭐</label>
+          <input type="radio" name="rating" value="4" id="star4">
+          <label for="star4">⭐</label>
+          <input type="radio" name="rating" value="3" id="star3">
+          <label for="star3">⭐</label>
+          <input type="radio" name="rating" value="2" id="star2">
+          <label for="star2">⭐</label>
+          <input type="radio" name="rating" value="1" id="star1">
+          <label for="star1">⭐</label>
+        </div>
+
+        <div class="form-group">
+          <label>Your Review</label>
+          <textarea name="comment" 
+                    placeholder="Share your experience with this car..."
+                    rows="5"></textarea>
+        </div>
+
+      </div>
+
+      {% if messages %}
+      <div class="form-errors">
+        {% for message in messages %}
+          <p>{{ message }}</p>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      <div class="review-buttons">
+        <button type="submit" class="btn-submit">⭐ Submit Review</button>
+        <a href="{% url 'car_detail' car.id %}" class="btn-cancel">Cancel</a>
+      </div>
+
+    </form>
+  </div>
+
+  <!-- RIGHT — Car Info -->
+  <div class="review-right">
+    <div class="car-card">
+      {% with car.images.first as img %}
+        {% if img %}
+          <img src="{{ img.image_url }}" alt="{{ car.brand }}">
+        {% else %}
+          <div class="no-img">🚗</div>
+        {% endif %}
+      {% endwith %}
+      <div class="car-card-info">
+        <h3>{{ car.brand }} {{ car.model }} {{ car.year }}</h3>
+        <p class="car-price">₹{{ car.price }}</p>
+        <div class="car-tags">
+          <span>⛽ {{ car.fuel_type }}</span>
+          <span>⚙️ {{ car.transmission }}</span>
+          <span>📍 {{ car.city }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-card">
+      <div class="info-icon">📝</div>
+      <h3>Review Guidelines</h3>
+      <ul>
+        <li>Be honest and helpful</li>
+        <li>Rate based on condition</li>
+        <li>Mention pros and cons</li>
+        <li>Keep it respectful</li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+{% endblock content %}

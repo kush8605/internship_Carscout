@@ -1,0 +1,302 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+  --red: #ff4d30;
+  --red-dark: #e03a1f;
+  --black: #0d0d0d;
+  --white: #ffffff;
+  --grey: #f5f5f5;
+  --grey2: #ebebeb;
+  --text-muted: #888;
+  --shadow: 0 4px 28px rgba(0,0,0,0.08);
+  --shadow-lg: 0 16px 48px rgba(0,0,0,0.14);
+  --radius: 16px;
+  --radius-lg: 24px;
+   scroll-behavior: smooth;
+}
+
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background: #f7f7f7;
+  color: var(--black);
+  overflow-x: hidden;
+}
+
+
+/* =============================================
+   NAVBAR BASE
+============================================= */
+.navbar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 1000;
+  padding: 0 48px;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  transition: background 0.3s, box-shadow 0.3s;
+  background: rgba(13,13,13,0.96);
+  backdrop-filter: blur(12px);    
+}
+
+/* .solid — for pages WITHOUT a dark hero (car_detail, my_listings etc.) */
+.navbar.solid {
+  background: rgba(13,13,13,0.96);
+  backdrop-filter: blur(12px);
+}
+
+/* on scroll — all pages */
+.navbar.scrolled {
+  background: rgba(13,13,13,0.96) !important;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 2px 20px rgba(0,0,0,0.3);
+}
+
+.nav-container {
+  max-width: 1300px;
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 40px;
+}
+
+/* ===== LOGO ===== */
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+
+.logo-wheel {
+  font-size: 22px;
+  color: var(--red);
+  display: inline-block;
+  animation: spinSlow 8s linear infinite;
+}
+
+@keyframes spinSlow { to { transform: rotate(360deg); } }
+
+.logo-text {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 26px;
+  color: var(--white);
+  letter-spacing: 2px;
+}
+
+.logo-text span { color: var(--red); }
+
+/* ===== LINKS ===== */
+.nav-links {
+  display: flex;
+  gap: 4px;
+  flex: 1;
+}
+
+.nav-link {
+  color: rgba(255,255,255,0.7);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 8px 14px;
+  border-radius: 8px;
+  transition: color 0.2s, background 0.2s;
+  white-space: nowrap;
+}
+
+.nav-link:hover {
+  color: white;
+  background: rgba(255,255,255,0.08);
+}
+
+/* ===== ACTIONS ===== */
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+/* Public nav — login/signup buttons */
+.btn-nav-login {
+  color: rgba(255,255,255,0.8);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 9px 18px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.15);
+  transition: all 0.2s;
+}
+
+.btn-nav-login:hover {
+  color: white;
+  border-color: rgba(255,255,255,0.4);
+}
+
+.btn-nav-signup {
+  background: var(--red);
+  color: white;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 700;
+  padding: 9px 20px;
+  border-radius: 10px;
+  transition: background 0.2s, transform 0.15s;
+}
+
+.btn-nav-signup:hover {
+  background: var(--red-dark);
+  transform: translateY(-1px);
+}
+
+/* ===== USER DROPDOWN ===== */
+.nav-user {
+  position: relative;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 14px 6px 6px;
+  border-radius: 30px;
+  border: 1px solid rgba(255,255,255,0.15);
+  transition: border-color 0.2s;
+  user-select: none;
+}
+
+.nav-user:hover,
+.nav-user.open {
+  border-color: rgba(255,255,255,0.35);
+}
+
+.nav-avatar {
+  width: 32px;
+  height: 32px;
+  background: var(--red);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 14px;
+  color: white;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.nav-avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+.nav-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: white;
+}
+
+/* hide the HTML chevron span — use CSS instead */
+.nav-chevron { display: none; }
+
+.nav-user::after {
+  content: '▾';
+  font-size: 11px;
+  color: rgba(255,255,255,0.4);
+  transition: transform 0.2s;
+}
+
+.nav-user.open::after { transform: rotate(180deg); }
+
+.nav-dropdown {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  background: white;
+  border-radius: 14px;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.15);
+  min-width: 200px;
+  padding: 8px;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-8px);
+  transition: opacity 0.2s, transform 0.2s;
+  z-index: 1001;
+}
+
+.nav-user.open .nav-dropdown {
+  opacity: 1;
+  pointer-events: all;
+  transform: translateY(0);
+}
+
+.nav-dropdown a {
+  display: block;
+  padding: 10px 14px;
+  text-decoration: none;
+  color: var(--black);
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: 8px;
+  transition: background 0.15s;
+}
+
+.nav-dropdown a:hover { background: var(--grey); }
+
+.dropdown-divider {
+  height: 1px;
+  background: var(--grey2);
+  margin: 6px 0;
+}
+
+.dropdown-logout { color: var(--red) !important; font-weight: 600 !important; }
+
+/* ===== HAMBURGER ===== */
+.nav-hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  margin-left: auto;
+}
+
+.nav-hamburger span {
+  display: block;
+  width: 24px;
+  height: 2px;
+  background: white;
+  border-radius: 2px;
+  transition: 0.3s;
+}
+
+/* =============================================
+   RESPONSIVE
+============================================= */
+@media (max-width: 1024px) {
+  .navbar { padding: 0 24px; }
+}
+
+@media (max-width: 768px) {
+  .navbar { padding: 0 20px; }
+
+  .nav-links {
+    display: none;
+    position: fixed;
+    top: 70px; left: 0; right: 0;
+    background: rgba(13,13,13,0.98);
+    flex-direction: column;
+    padding: 16px; gap: 4px;
+    border-top: 1px solid rgba(255,255,255,0.05);
+  }
+
+  .nav-links.open { display: flex; }
+  .nav-link { padding: 12px 16px; font-size: 15px; }
+  .nav-hamburger { display: flex; }
+  .nav-name { display: none; }
+  .btn-nav-login  { padding: 8px 14px; font-size: 13px; }
+  .btn-nav-signup { padding: 8px 14px; font-size: 13px; }
+}

@@ -3,24 +3,50 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    {% comment %} <link rel="stylesheet" href="{% static 'css/style.css' %}"> {% endcomment %}
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WheelDeal</title>
+    <link rel="stylesheet" href="{% static 'css/user/navbar.css' %}">
+    
 </head>
 <body>
-    {% block navbar %}
-    {% if request.user.role == 'Admin' %}
-        {% include 'carpage/admin/adminnav.html' %}
-    {% elif request.user.role == 'Buyer' %}
-        {% include 'carpage/user/usernav.html' %}
-    {% elif request.user.role == 'Seller' %}
-        {% include 'carpage/user/usernav.html' %}   
-    {% endif %}
-    {% endblock navbar %}
 
-    {% block content %}
-    {% endblock %}
-    
-    {% block scripts %}
-    {% endblock scripts %}
-    
-</body>    
+    {% if not request.user.is_authenticated %}
+        {% include 'carpage/user/publicnav.html' %}
+    {% elif request.user.role == 'Buyer' %}
+        {% include 'carpage/user/buyer/buyernav.html' %}
+    {% elif request.user.role == 'Seller' %}
+        {% include 'carpage/user/seller/sellernav.html' %}
+    {% elif request.user.role == 'Admin' %}
+        {% include 'carpage/user/admin/adminnav.html' %}
+    {% endif %}
+
+    {% block content %}{% endblock %}
+
+    {% block scripts %}{% endblock scripts %}
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        window.addEventListener('scroll', () => {
+          const navbar = document.getElementById('navbar');
+          if (navbar) navbar.classList.toggle('scrolled', window.scrollY > 50);
+        });
+        const hamburger = document.getElementById('hamburger');
+        if (hamburger) {
+          hamburger.addEventListener('click', () => {
+            document.getElementById('navLinks').classList.toggle('open');
+          });
+        }
+        const navUser = document.getElementById('navUser');
+        if (navUser) {
+          navUser.addEventListener('click', (e) => {
+            e.stopPropagation();
+            navUser.classList.toggle('open');
+          });
+          document.addEventListener('click', () => navUser.classList.remove('open'));
+        }
+      });
+      
+    </script>
+
+</body>
 </html>

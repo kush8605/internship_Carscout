@@ -1,0 +1,46 @@
+{% load static %}
+
+<nav class="navbar" id="navbar">
+  <div class="nav-container">
+
+    <a href="{% url 'sellerhome' %}" class="nav-logo">
+      <span class="logo-wheel">⚙</span>
+      <span class="logo-text">Wheel<span>Deal</span></span>
+    </a>
+
+    <div class="nav-links" id="navLinks">
+      <a href="{% url 'post_car' %}" class="nav-link nav-link-post">+ Post a Car</a>
+      <a href="{% url 'my_listing' %}" class="nav-link">My Listings</a>
+      <a href="{% url 'seller_inquiries' %}" class="nav-link">Inquiries</a>
+      <a href="{% url 'seller_test_drives' %}" class="nav-link">Test Drives</a>
+    </div>
+
+    <div class="nav-actions">
+      <div class="nav-user" id="navUser">
+        <div class="nav-avatar">
+          {% if request.user.profile_picture %}
+            <img src="{{ request.user.profile_picture.url }}" alt="">
+          {% else %}
+            {{ request.user.first_name|first|upper }}
+          {% endif %}
+        </div>
+        <span class="nav-name">{{ request.user.first_name }}</span>
+        <span class="nav-chevron">▾</span>
+        <div class="nav-dropdown">
+          <a href="{% url 'profile' %}">👤 Profile</a>
+          <a href="{% url 'my_listing' %}">🚗 My Listings</a>
+          <a href="{% url 'post_car' %}">➕ Post a Car</a>
+          <a href="{% url 'seller_inquiries' %}">💬 Inquiries</a>
+          <a href="{% url 'seller_test_drives' %}">📅 Test Drives</a>
+          <div class="dropdown-divider"></div>
+          <a href="{% url 'logout' %}" class="dropdown-logout">🚪 Logout</a>
+        </div>
+      </div>
+    </div>
+
+    <button class="nav-hamburger" id="hamburger">
+      <span></span><span></span><span></span>
+    </button>
+
+  </div>
+</nav>
