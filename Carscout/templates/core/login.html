@@ -10,6 +10,22 @@
 </head>
 
 <body>
+
+    <!-- BLUR OVERLAY (shows when OTP active) -->
+    <div class="otp-blur-overlay" id="otpBlurOverlay"></div>
+
+    <!-- VERIFY EMAIL POPUP OVERLAY -->
+    <div class="verify-popup-overlay" id="verifyPopupOverlay"></div>
+
+    <!-- VERIFY EMAIL POPUP -->
+    <div class="verify-popup" id="verifyPopup">
+        <button class="popup-close-btn" id="verifyPopupClose">✕</button>
+        <div class="popup-icon">📧</div>
+        <h3>Verify Your Email</h3>
+        <p>Your account is not verified yet. We've sent an OTP to<br><strong>{{ verify_email }}</strong></p>
+        <button class="popup-btn" id="goToOtpBtn">Enter OTP →</button>
+    </div>
+
     <div class="auth-wrapper" id="authWrapper">
 
         <!-- Register Form -->
@@ -86,7 +102,325 @@
             </div>
         </div>
 
+        <!-- OTP PANEL (slides from center) -->
+        <div class="otp-panel" id="otpPanel">
+            <div class="otp-panel-inner">
+                <button class="otp-close-btn" id="otpCloseBtn">✕</button>
+                <div class="otp-icon">🔐</div>
+                <h1>Enter OTP</h1>
+                <p>We've sent a 6-digit OTP to<br><strong>{{ verify_email }}</strong></p>
+
+                {% if otp_error %}
+                <div class="error-msg" style="margin-bottom:10px">{{ otp_error }}</div>
+                {% endif %}
+
+                <form method="post" action="{% url 'login' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="otp_submit" value="1">
+                    <div class="otp-inputs">
+                        <input type="text" name="otp_1" maxlength="1" class="otp-digit" inputmode="numeric">
+                        <input type="text" name="otp_2" maxlength="1" class="otp-digit" inputmode="numeric">
+                        <input type="text" name="otp_3" maxlength="1" class="otp-digit" inputmode="numeric">
+                        <input type="text" name="otp_4" maxlength="1" class="otp-digit" inputmode="numeric">
+                        <input type="text" name="otp_5" maxlength="1" class="otp-digit" inputmode="numeric">
+                        <input type="text" name="otp_6" maxlength="1" class="otp-digit" inputmode="numeric">
+                    </div>
+                    <button type="submit" class="otp-submit-btn">Verify OTP</button>
+                </form>
+
+                <div class="otp-resend">
+                    Didn't receive it?
+                    <form method="post" action="{% url 'login' %}" style="display:inline">
+                        {% csrf_token %}
+                        <input type="hidden" name="resend_otp" value="1">
+                        <input type="hidden" name="resend_email" value="{{ verify_email }}">
+                        <button type="submit" class="resend-btn">Resend OTP</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
     </div>
+
+    <style>
+        /* ── Blur overlay ── */
+        .otp-blur-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 150;
+            animation: fadeIn 0.4s ease;
+        }
+        .otp-blur-overlay.active {
+            display: block;
+        }
+
+        /* ── Verify popup overlay ── */
+        .verify-popup-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            background: rgba(0, 0, 0, 0.45);
+            z-index: 300;
+            animation: fadeIn 0.3s ease;
+        }
+        .verify-popup-overlay.active {
+            display: block;
+        }
+
+        /* ── Verify popup box ── */
+        .verify-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.85);
+            background: #fff;
+            border-radius: 24px;
+            padding: 48px 40px 40px;
+            text-align: center;
+            max-width: 420px;
+            width: 90%;
+            z-index: 400;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 24px 80px rgba(0, 0, 0, 0.25);
+        }
+        .verify-popup.active {
+            opacity: 1;
+            pointer-events: all;
+            transform: translate(-50%, -50%) scale(1);
+        }
+        .verify-popup .popup-icon {
+            font-size: 52px;
+            margin-bottom: 16px;
+        }
+        .verify-popup h3 {
+            font-size: 22px;
+            font-weight: 700;
+            color: #0d0d0d;
+            margin-bottom: 12px;
+        }
+        .verify-popup p {
+            color: #888;
+            font-size: 14px;
+            line-height: 1.7;
+            margin-bottom: 28px;
+        }
+        .verify-popup p strong {
+            color: #0d0d0d;
+        }
+        .popup-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            padding: 14px 36px;
+            border-radius: 50px;
+            font-size: 15px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            text-transform: none;
+        }
+        .popup-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+        .popup-close-btn {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            background: #f5f5f5 !important;
+            color: #888 !important;
+            width: 32px;
+            height: 32px;
+            border-radius: 50% !important;
+            padding: 0 !important;
+            font-size: 13px !important;
+            box-shadow: none !important;
+            letter-spacing: 0;
+            text-transform: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+        .popup-close-btn:hover {
+            background: #e0e0e0 !important;
+            transform: none !important;
+            box-shadow: none !important;
+        }
+
+        /* ── OTP Panel ── */
+        .otp-panel {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.85);
+            width: 90%;
+            max-width: 380px;
+            height: auto;
+            background: #ffffff;
+            border-radius: 24px;
+            z-index: 400;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 32px 80px rgba(0, 0, 0, 0.25);
+        }
+        .otp-panel.active {
+            opacity: 1;
+            pointer-events: all;
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        /* auth-wrapper blurs when OTP active */
+        .auth-wrapper.otp-active .login-form-box {
+            transform: translateX(-30px);
+            opacity: 0.3;
+            filter: blur(2px);
+            transition: all 0.5s ease;
+        }
+        .auth-wrapper.otp-active .register-form-box {
+            transform: translateX(30px);
+            opacity: 0.3;
+            filter: blur(2px);
+            transition: all 0.5s ease;
+        }
+        .auth-wrapper.otp-active .slide-panel-wrapper {
+            opacity: 0.2;
+            filter: blur(2px);
+            transition: all 0.5s ease;
+        }
+
+        .otp-panel-inner {
+            padding: 40px 36px;
+            text-align: center;
+            position: relative;
+        }
+        .otp-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+        .otp-panel h1 {
+            font-size: 22px;
+            font-weight: 700;
+            color: #0d0d0d;
+            margin-bottom: 10px;
+        }
+        .otp-panel p {
+            font-size: 13px;
+            color: #888;
+            line-height: 1.7;
+            margin: 0 0 24px;
+        }
+        .otp-panel p strong {
+            color: #0d0d0d;
+            font-weight: 600;
+        }
+        .otp-inputs {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 24px;
+        }
+        .otp-digit {
+            width: 44px !important;
+            height: 52px;
+            text-align: center;
+            font-size: 22px;
+            font-weight: 700;
+            border-radius: 12px !important;
+            border: 2px solid #e0e0e0 !important;
+            background: #f9f9f9 !important;
+            color: #0d0d0d;
+            transition: all 0.2s ease;
+            padding: 0 !important;
+            margin: 0 !important;
+        }
+        .otp-digit:focus {
+            border-color: #667eea !important;
+            background: #fff !important;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.15) !important;
+            outline: none;
+        }
+        .otp-digit.filled {
+            border-color: #667eea !important;
+            background: #f0f2ff !important;
+        }
+        .otp-submit-btn {
+            width: 100%;
+            padding: 14px !important;
+            font-size: 14px !important;
+            border-radius: 14px !important;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+            margin-bottom: 16px;
+        }
+        .otp-resend {
+            font-size: 13px;
+            color: #888;
+        }
+        .resend-btn {
+            background: transparent !important;
+            color: #667eea !important;
+            border: none !important;
+            padding: 0 !important;
+            font-size: 13px !important;
+            font-weight: 600 !important;
+            box-shadow: none !important;
+            text-decoration: underline;
+            cursor: pointer;
+            letter-spacing: 0;
+            text-transform: none;
+        }
+        .resend-btn:hover {
+            color: #764ba2 !important;
+            transform: none !important;
+            box-shadow: none !important;
+        }
+        .otp-close-btn {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            background: #f5f5f5 !important;
+            color: #888 !important;
+            width: 32px;
+            height: 32px;
+            border-radius: 50% !important;
+            padding: 0 !important;
+            font-size: 13px !important;
+            box-shadow: none !important;
+            letter-spacing: 0;
+            text-transform: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .otp-close-btn:hover {
+            background: #e0e0e0 !important;
+            transform: none !important;
+            box-shadow: none !important;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @media (max-width: 768px) {
+            .otp-panel { width: 90% !important; max-width: 340px !important; }
+            .otp-digit { width: 38px !important; height: 46px !important; font-size: 18px !important; }
+            .otp-inputs { gap: 7px !important; }
+            .verify-popup { padding: 40px 24px 32px; }
+        }
+    </style>
 
     <script>
         const registerBtn = document.getElementById('registerBtn');
@@ -94,13 +428,117 @@
         const mobileRegisterBtn = document.getElementById('mobileRegisterBtn');
         const mobileLoginBtn = document.getElementById('mobileLoginBtn');
         const authWrapper = document.getElementById('authWrapper');
+        const otpPanel = document.getElementById('otpPanel');
+        const otpBlurOverlay = document.getElementById('otpBlurOverlay');
+        const otpCloseBtn = document.getElementById('otpCloseBtn');
+        const verifyPopup = document.getElementById('verifyPopup');
+        const verifyPopupOverlay = document.getElementById('verifyPopupOverlay');
+        const verifyPopupClose = document.getElementById('verifyPopupClose');
+        const goToOtpBtn = document.getElementById('goToOtpBtn');
 
         if (registerBtn) registerBtn.addEventListener('click', () => authWrapper.classList.add("panel-active"));
         if (loginBtn) loginBtn.addEventListener('click', () => authWrapper.classList.remove("panel-active"));
         if (mobileRegisterBtn) mobileRegisterBtn.addEventListener('click', () => authWrapper.classList.add("panel-active"));
         if (mobileLoginBtn) mobileLoginBtn.addEventListener('click', () => authWrapper.classList.remove("panel-active"));
 
-        // login page — no panel-active needed, login side opens by default
+        // ── Step 1: Show verify email popup ──
+        function showVerifyPopup() {
+            verifyPopup.classList.add('active');
+            verifyPopupOverlay.classList.add('active');
+        }
+
+        // ── Hide verify popup ──
+        function hideVerifyPopup() {
+            verifyPopup.classList.remove('active');
+            verifyPopupOverlay.classList.remove('active');
+        }
+
+        // ── Step 2: Show OTP panel ──
+        function showOtpPanel() {
+            hideVerifyPopup();
+            otpPanel.classList.add('active');
+            otpBlurOverlay.classList.add('active');
+            authWrapper.classList.add('otp-active');
+            setTimeout(() => document.querySelector('.otp-digit').focus(), 300);
+        }
+
+        // ── Hide OTP panel ──
+        function hideOtpPanel() {
+            otpPanel.classList.remove('active');
+            otpBlurOverlay.classList.remove('active');
+            authWrapper.classList.remove('otp-active');
+        }
+
+        // close verify popup
+        verifyPopupClose.addEventListener('click', hideVerifyPopup);
+        verifyPopupOverlay.addEventListener('click', hideVerifyPopup);
+
+        // "Enter OTP" button → go to OTP panel
+        goToOtpBtn.addEventListener('click', showOtpPanel);
+
+        // close OTP panel
+        otpCloseBtn.addEventListener('click', hideOtpPanel);
+        otpBlurOverlay.addEventListener('click', hideOtpPanel);
+
+        // OTP digit auto-jump
+        document.querySelectorAll('.otp-digit').forEach((input, index, inputs) => {
+            input.addEventListener('input', (e) => {
+                const val = e.target.value.replace(/\D/g, '');
+                e.target.value = val;
+                if (val) {
+                    e.target.classList.add('filled');
+                    if (index < inputs.length - 1) inputs[index + 1].focus();
+                } else {
+                    e.target.classList.remove('filled');
+                }
+            });
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Backspace' && !input.value && index > 0) {
+                    inputs[index - 1].focus();
+                    inputs[index - 1].classList.remove('filled');
+                }
+            });
+            input.addEventListener('paste', (e) => {
+                e.preventDefault();
+                const paste = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, 6);
+                paste.split('').forEach((char, i) => {
+                    if (inputs[i]) {
+                        inputs[i].value = char;
+                        inputs[i].classList.add('filled');
+                    }
+                });
+                if (inputs[paste.length - 1]) inputs[paste.length - 1].focus();
+            });
+        });
+
+        // Step 1 — show verify popup first (inactive user)
+        {% if show_verify_popup %}
+            window.addEventListener('DOMContentLoaded', () => {
+                setTimeout(showVerifyPopup, 400);
+            });
+        {% endif %}
+
+        // Step 2 — if otp error, skip popup and go straight to OTP panel
+        {% if otp_error %}
+            window.addEventListener('DOMContentLoaded', () => {
+                setTimeout(showOtpPanel, 400);
+            });
+        {% endif %}
     </script>
 </body>
 </html>
+{% comment %} ```
+
+---
+
+**Full flow now:**
+```
+Login → inactive
+    ↓
+📧 Popup "Verify Your Email" appears
+    ↓
+Click "Enter OTP →"
+    ↓  
+🔐 OTP panel slides in, login/signup blur apart
+    ↓
+Enter OTP → verified → home ✅ {% endcomment %}

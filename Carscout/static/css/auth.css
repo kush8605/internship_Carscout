@@ -440,3 +440,18 @@ form {
         color: #fff;
     }
 }
+/* ── OTP Panel responsive ── */
+    .otp-panel {
+        width: 90% !important;
+        max-width: 340px !important;
+    }
+
+    .otp-digit {
+        width: 38px !important;
+        height: 46px !important;
+        font-size: 18px !important;
+    }
+
+    .otp-inputs {
+        gap: 7px !important;
+    }

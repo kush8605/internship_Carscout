@@ -32,6 +32,12 @@ class User(AbstractBaseUser):
         return self.is_admin
         
     email = models.EmailField(unique=True)
+    STATUS_CHOICES = (
+        ('active', 'Active'),
+        ('inactive', 'Inactive'),
+        ('blocked', 'Blocked'),
+        ('deleted', 'Deleted'),
+    )
     role_choice =(
         ('Admin','Admin'),
         ('Buyer','Buyer'),
@@ -43,6 +49,7 @@ class User(AbstractBaseUser):
     )
     role = models.CharField(max_length=10,choices=role_choice,default='Buyer')
     is_active = models.BooleanField(default=True)
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='inactive')  # NEW
     profile_picture = models.ImageField(upload_to='profile_images/', blank=True, null=True)
     is_staff = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
